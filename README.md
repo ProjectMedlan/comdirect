@@ -1,25 +1,23 @@
 # Comdirect
 
-Zufällig bin ich darüber gestolpert, dass die Comdirect eine Kunden API zur Verfügung stellt. 
-Das wollte ich mir genauer anschauen. Wenn man die Hürde des 5-Phasen-Logins überwunden hat, kann
+ZufÃ¤llig bin ich darÃ¼ber gestolpert, dass die Comdirect eine Kunden API zur VerfÃ¼gung stellt. 
+Das wollte ich mir genauer anschauen. Wenn man die HÃ¼rde des 5-Phasen-Logins Ã¼berwunden hat, kann
 man damit ganz viele Sachen abfragen.  
   
-Ich habe mal einige der Endpunkte in die API übernommen und auch gleich eine kleine Demo-Anwendung mit dazu gepackt.
+Ich habe mal einige der Endpunkte in die API Ã¼bernommen und auch gleich eine kleine Demo-Anwendung mit dazu gepackt.
 
 ## Beschreibung
-Das Projekt kapselt die API der Comdirect in .NET und stellt sie in einer einfachen Form zur Verfügung.
-Bisher habe ich mich auf die Abfrage von Konten, Depots und die Postbox beschränkt.  
+Das Projekt kapselt die API der Comdirect in .NET und stellt sie in einer einfachen Form zur VerfÃ¼gung.
+Bisher habe ich mich auf die Abfrage von Konten, Depots und die Postbox beschrÃ¤nkt.  
   
-Die beigefügte Demo-Anwendung liefert ein Praxisnahes Beispiel, wie man die abgefragten Daten visualisieren kann.
+Die beigefÃ¼gte Demo-Anwendung liefert ein Praxisnahes Beispiel, wie man die abgefragten Daten visualisieren kann.
 
-<span style="color:red">
-Achtung: Sollte man die TAN Eingabe mehrfach hintereinander abbrechen, kann der Zugang zum Konto gesperrt werden!
-</span>
+$${\color{red}Achtung:}$$  Sollte man die TAN Eingabe mehrfach hintereinander abbrechen, kann der Zugang zum Konto gesperrt werden!
 
 ## Funktionen & Highlights
-- Login über die Comdirect API
+- Login Ã¼ber die Comdirect API
 - Abfrage von Konten, Depots und Postbox
-- Report über alle Konten, Depots & Karten anzeigen
+- Report Ã¼ber alle Konten, Depots & Karten anzeigen
 - Konten: Transaktionen auflisten
 - Depot: Transaktionen auflisten
 - Depot: Positionen auflisten
@@ -28,11 +26,11 @@ Achtung: Sollte man die TAN Eingabe mehrfach hintereinander abbrechen, kann der 
 
 ## Installation
 
-Für die Verwendung der API muss man sich auf der Comdirect Seite freischalten lassen. 
-Den entsprechenden Menüpunkt findet man, wenn man angemeldet ist, unter Verwaltung - Entwicklerzugang.  
+FÃ¼r die Verwendung der API muss man sich auf der Comdirect Seite freischalten lassen. 
+Den entsprechenden MenÃ¼punkt findet man, wenn man angemeldet ist, unter Verwaltung - Entwicklerzugang.  
   
 Man bekommt dann eine ClientID und ein ClientSecret. Diese muss man in den 'UserSecrets' hinterlegen.  
-Rechtsklick auf das Projekt 'Comdirect' -> Manage User Secrets (bzw. Geheime Benutzerschlüssel verwalten).  
+Rechtsklick auf das Projekt 'Comdirect' -> Manage User Secrets (bzw. Geheime BenutzerschlÃ¼ssel verwalten).  
 ```json
 {
   "UserSettings": {
@@ -42,48 +40,48 @@ Rechtsklick auf das Projekt 'Comdirect' -> Manage User Secrets (bzw. Geheime Ben
 }
 ```
 
-In der appsettings.json kann man zusätzlich noch die Zugangsnummer und ein 
-Standard-Verzeichnisses für Postbox-Downloads hinterlegen.
+In der appsettings.json kann man zusÃ¤tzlich noch die Zugangsnummer und ein 
+Standard-Verzeichnisses fÃ¼r Postbox-Downloads hinterlegen.
 ```json
 {
   "UserSettings": {
 	"Username": "IHRE_COMDIRECT_ZUGANGSNUMMER",
-	"DefaultDownloadDirectory": "Verzeichnis für Postbox-Downloads"
+	"DefaultDownloadDirectory": "Verzeichnis fÃ¼r Postbox-Downloads"
    }
 }
 ```
 
 **Laufzeitumgebung:** .NET Core 9
 
-## Einschränkungen
+## EinschrÃ¤nkungen
 
-Folgende Einschränkungen sind zu beachten
+Folgende EinschrÃ¤nkungen sind zu beachten
 
 ### Auf Euro ausgelegt
 
-Die Demo Applikation geht im Moment davon aus, dass die zurückgelieferten Werte in Euro sind. (Was sie im Regelfall auch sind)
+Die Demo Applikation geht im Moment davon aus, dass die zurÃ¼ckgelieferten Werte in Euro sind. (Was sie im Regelfall auch sind)
 
-## Geplante Änderungen
+## Geplante Ã„nderungen
 
 ### API
 - Doppelte Elemente in den Response Klassen zusammenfassen
-- InstrumentViewModel Mapper hinzufügen (doppelten Code vermeiden)
-- API-Requests Refactoring: Doppelte Code Blöcke zusammenfassen
-- Exception Handling hinzufügen
+- InstrumentViewModel Mapper hinzufÃ¼gen (doppelten Code vermeiden)
+- API-Requests Refactoring: Doppelte Code BlÃ¶cke zusammenfassen
+- Exception Handling hinzufÃ¼gen
 - Kompiler-Warnungen beheben
 
 ### UI
-- ToolTips im ListView für alle Spalten ermöglichen (https://stackoverflow.com/questions/2648281/listview-tooltip-only-in-first-cell-vb-net)
+- ToolTips im ListView fÃ¼r alle Spalten ermÃ¶glichen (https://stackoverflow.com/questions/2648281/listview-tooltip-only-in-first-cell-vb-net)
 - Einstellungsdialog
-- Postbox: Durchblättern aller Nachrichten
-- Postbox: Filtermöglichkeiten
-- Transaktionen & Positionen: Durchblättern & Filtern
-- ListViews: Sortierungen hinzufügen
-- Projekt mit Icons aufhübschen
+- Postbox: DurchblÃ¤ttern aller Nachrichten
+- Postbox: FiltermÃ¶glichkeiten
+- Transaktionen & Positionen: DurchblÃ¤ttern & Filtern
+- ListViews: Sortierungen hinzufÃ¼gen
+- Projekt mit Icons aufhÃ¼bschen
 
 ## Changelog
 
-Eine Übersicht über Änderungen und Updates im Projekt.
+Eine Ãœbersicht Ã¼ber Ã„nderungen und Updates im Projekt.
 
 - 1.0.0
-  - Erstveröffentlichung auf GitHub
+  - ErstverÃ¶ffentlichung auf GitHub
