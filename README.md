@@ -12,6 +12,10 @@ Bisher habe ich mich auf die Abfrage von Konten, Depots und die Postbox beschrän
   
 Die beigefügte Demo-Anwendung liefert ein Praxisnahes Beispiel, wie man die abgefragten Daten visualisieren kann.
 
+<span style="color:red">
+Achtung: Sollte man die TAN Eingabe mehrfach hintereinander abbrechen, kann der Zugang zum Konto gesperrt werden!
+</span>
+
 ## Funktionen & Highlights
 - Login über die Comdirect API
 - Abfrage von Konten, Depots und Postbox
