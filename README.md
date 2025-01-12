@@ -12,9 +12,7 @@ Bisher habe ich mich auf die Abfrage von Konten, Depots und die Postbox beschrän
   
 Die beigefügte Demo-Anwendung liefert ein Praxisnahes Beispiel, wie man die abgefragten Daten visualisieren kann.
 
-<span style="color:red">
-Achtung: Sollte man die TAN Eingabe mehrfach hintereinander abbrechen, kann der Zugang zum Konto gesperrt werden!
-</span>
+$${\color{red}Achtung: Sollte man die TAN Eingabe mehrfach hintereinander abbrechen, kann der Zugang zum Konto gesperrt werden!}$$
 
 ## Funktionen & Highlights
 - Login über die Comdirect API
@@ -85,5 +83,11 @@ Die Demo Applikation geht im Moment davon aus, dass die zurückgelieferten Werte 
 
 Eine Übersicht über Änderungen und Updates im Projekt.
 
-- 1.0.0
+- 1.0.0.1 (12.01.2025)
+  - UserSecrets Datei ist jetzt optional
+  - ClientId & CientSecret als Eingabe in der UI beim Login ermöglicht
+  - Objekt für die ClientSessionId hinzugefügt & Login-Header ausgelagert
+  - Kleinere UI Optmimerungen
+
+- 1.0.0.0 (11.01.2025)
   - Erstveröffentlichung auf GitHub

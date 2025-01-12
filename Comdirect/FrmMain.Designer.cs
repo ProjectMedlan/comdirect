@@ -33,6 +33,10 @@
             txtUsername = new TextBox();
             txtPassword = new TextBox();
             grpLogin = new GroupBox();
+            txtClientSecret = new TextBox();
+            txtClientID = new TextBox();
+            lblClientSecret = new Label();
+            lblClientID = new Label();
             btnSessionTimeout = new Button();
             lblSessionTimeoutText = new Label();
             lblSessionTimeout = new Label();
@@ -87,7 +91,7 @@
             // 
             // btnLogin
             // 
-            btnLogin.Location = new Point(232, 22);
+            btnLogin.Location = new Point(232, 72);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(72, 52);
             btnLogin.TabIndex = 0;
@@ -97,21 +101,26 @@
             // 
             // txtUsername
             // 
-            txtUsername.Location = new Point(121, 22);
+            txtUsername.Location = new Point(121, 72);
             txtUsername.Name = "txtUsername";
             txtUsername.Size = new Size(100, 23);
             txtUsername.TabIndex = 1;
             // 
             // txtPassword
             // 
-            txtPassword.Location = new Point(121, 51);
+            txtPassword.Location = new Point(121, 101);
             txtPassword.Name = "txtPassword";
             txtPassword.PasswordChar = '*';
             txtPassword.Size = new Size(100, 23);
             txtPassword.TabIndex = 2;
+            txtPassword.KeyPress += txtPassword_KeyPress;
             // 
             // grpLogin
             // 
+            grpLogin.Controls.Add(txtClientSecret);
+            grpLogin.Controls.Add(txtClientID);
+            grpLogin.Controls.Add(lblClientSecret);
+            grpLogin.Controls.Add(lblClientID);
             grpLogin.Controls.Add(btnSessionTimeout);
             grpLogin.Controls.Add(lblSessionTimeoutText);
             grpLogin.Controls.Add(lblSessionTimeout);
@@ -127,10 +136,44 @@
             grpLogin.TabStop = false;
             grpLogin.Text = "Login";
             // 
+            // txtClientSecret
+            // 
+            txtClientSecret.Location = new Point(121, 43);
+            txtClientSecret.Name = "txtClientSecret";
+            txtClientSecret.Size = new Size(183, 23);
+            txtClientSecret.TabIndex = 12;
+            txtClientSecret.UseSystemPasswordChar = true;
+            // 
+            // txtClientID
+            // 
+            txtClientID.Location = new Point(121, 16);
+            txtClientID.Name = "txtClientID";
+            txtClientID.Size = new Size(183, 23);
+            txtClientID.TabIndex = 11;
+            txtClientID.UseSystemPasswordChar = true;
+            // 
+            // lblClientSecret
+            // 
+            lblClientSecret.AutoSize = true;
+            lblClientSecret.Location = new Point(6, 46);
+            lblClientSecret.Name = "lblClientSecret";
+            lblClientSecret.Size = new Size(73, 15);
+            lblClientSecret.TabIndex = 10;
+            lblClientSecret.Text = "Client Secret";
+            // 
+            // lblClientID
+            // 
+            lblClientID.AutoSize = true;
+            lblClientID.Location = new Point(6, 19);
+            lblClientID.Name = "lblClientID";
+            lblClientID.Size = new Size(54, 15);
+            lblClientID.TabIndex = 9;
+            lblClientID.Text = "Client-ID";
+            // 
             // btnSessionTimeout
             // 
             btnSessionTimeout.Enabled = false;
-            btnSessionTimeout.Location = new Point(232, 125);
+            btnSessionTimeout.Location = new Point(232, 130);
             btnSessionTimeout.Name = "btnSessionTimeout";
             btnSessionTimeout.Size = new Size(72, 23);
             btnSessionTimeout.TabIndex = 8;
@@ -141,7 +184,7 @@
             // lblSessionTimeoutText
             // 
             lblSessionTimeoutText.AutoSize = true;
-            lblSessionTimeoutText.Location = new Point(6, 129);
+            lblSessionTimeoutText.Location = new Point(6, 134);
             lblSessionTimeoutText.Name = "lblSessionTimeoutText";
             lblSessionTimeoutText.Size = new Size(92, 15);
             lblSessionTimeoutText.TabIndex = 6;
@@ -150,7 +193,7 @@
             // lblSessionTimeout
             // 
             lblSessionTimeout.AutoSize = true;
-            lblSessionTimeout.Location = new Point(121, 129);
+            lblSessionTimeout.Location = new Point(121, 134);
             lblSessionTimeout.Name = "lblSessionTimeout";
             lblSessionTimeout.Size = new Size(16, 15);
             lblSessionTimeout.TabIndex = 7;
@@ -159,7 +202,7 @@
             // lblCustomerID
             // 
             lblCustomerID.AutoSize = true;
-            lblCustomerID.Location = new Point(6, 25);
+            lblCustomerID.Location = new Point(6, 75);
             lblCustomerID.Name = "lblCustomerID";
             lblCustomerID.Size = new Size(99, 15);
             lblCustomerID.TabIndex = 4;
@@ -168,7 +211,7 @@
             // lblPIN
             // 
             lblPIN.AutoSize = true;
-            lblPIN.Location = new Point(6, 54);
+            lblPIN.Location = new Point(6, 104);
             lblPIN.Name = "lblPIN";
             lblPIN.Size = new Size(26, 15);
             lblPIN.TabIndex = 5;
@@ -183,7 +226,7 @@
             grpAccounts.Size = new Size(580, 159);
             grpAccounts.TabIndex = 0;
             grpAccounts.TabStop = false;
-            grpAccounts.Text = "Kontenübersicht";
+            grpAccounts.Text = "Kontenübersicht (Konto auswählen, um die Details zu laden)";
             // 
             // lvwAccounts
             // 
@@ -254,7 +297,7 @@
             // 
             // lvwAccountTransactions
             // 
-            lvwAccountTransactions.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lvwAccountTransactions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lvwAccountTransactions.Columns.AddRange(new ColumnHeader[] { chAccountTransactionDate, chAccountTransactionSenderReceiver, chAccountTransactionValue, chAccountTransactionType });
             lvwAccountTransactions.FullRowSelect = true;
             lvwAccountTransactions.GridLines = true;
@@ -301,7 +344,7 @@
             // 
             // lvwDepotTransactions
             // 
-            lvwDepotTransactions.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lvwDepotTransactions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lvwDepotTransactions.Columns.AddRange(new ColumnHeader[] { chDepotTransactionBookingDate, chDepotTransactionShortname, chDepotTransactionQuantity, chDepotTransactionTransactionValue, chDepotTransactionTransactionType });
             lvwDepotTransactions.FullRowSelect = true;
             lvwDepotTransactions.GridLines = true;
@@ -354,7 +397,7 @@
             // 
             // lvwDepotPositions
             // 
-            lvwDepotPositions.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lvwDepotPositions.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lvwDepotPositions.Columns.AddRange(new ColumnHeader[] { chDepotPositionName, chDepotPositionQuantity, chDepotPositionCurrentValue, chDepotPositionTotalChange });
             lvwDepotPositions.FullRowSelect = true;
             lvwDepotPositions.GridLines = true;
@@ -564,5 +607,9 @@
         private ColumnHeader chDepotPositionQuantity;
         private ColumnHeader chDepotPositionCurrentValue;
         private ColumnHeader chDepotPositionTotalChange;
+        private TextBox txtClientSecret;
+        private TextBox txtClientID;
+        private Label lblClientSecret;
+        private Label lblClientID;
     }
 }

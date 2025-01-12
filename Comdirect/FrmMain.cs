@@ -42,6 +42,8 @@ namespace Comdirect
         private void FrmMain_Load(object sender, EventArgs e)
         {
             _userSettings = Program.Configuration.GetSection("UserSettings").Get<UserSettings>();
+            txtClientID.Text = _userSettings?.ClientID;
+            txtClientSecret.Text = _userSettings?.ClientSecret;
             txtUsername.Text = _userSettings?.Username;
             if (!string.IsNullOrEmpty(txtUsername.Text))
             {
@@ -70,13 +72,21 @@ namespace Comdirect
             }
         }
 
+        private void txtPassword_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+            {
+                btnLogin.PerformClick();
+            }
+        }
+
         private async Task<bool> PerformFullLogin()
         {
             if (_userSettings == null) return false;
-            if (string.IsNullOrEmpty(_userSettings.ClientID)) return false;
-            if (string.IsNullOrEmpty(_userSettings.ClientSecret)) return false;
+            if (string.IsNullOrEmpty(txtClientID.Text)) return false;
+            if (string.IsNullOrEmpty(txtClientSecret.Text)) return false;
 
-            _comdirectAPI = new ComdirectAPI(txtUsername.Text, txtPassword.Text, _userSettings.ClientID, _userSettings.ClientSecret);
+            _comdirectAPI = new ComdirectAPI(txtUsername.Text, txtPassword.Text, txtClientID.Text, txtClientSecret.Text);
             _comdirectAPI.OnNewDebugLogMessage += RaiseNewDebugLogMessage;
             _comdirectAPI.OnNewInfoLogMessage += RaiseNewLogMessage;
             _comdirectAPI.OnSessionTimeoutChanged += OnSessionTimeoutChanged;
@@ -236,6 +246,8 @@ namespace Comdirect
                 {
                     _accountTransactionCache[accountId].Add(transactionResponse.ConvertToViewModel());
                 }
+
+                RaiseNewLogMessage($"{transactionsList.values.Length} Kontotransaktionen geladen");
             }
 
             if (_accountTransactionCache[accountId].Count == 0) return;
@@ -285,6 +297,8 @@ namespace Comdirect
                 {
                     _depotTransactionCache[depotId].Add(transactionResponse.ConvertToViewModel());
                 }
+
+                RaiseNewLogMessage($"{transactionsList.values.Length} Depottransaktionen geladen");
             }
 
             if (_depotTransactionCache[depotId].Count == 0) return;
@@ -335,6 +349,8 @@ namespace Comdirect
                 {
                     _depotPositionCache[depotId].Add(positionResponse.ConvertToViewModel());
                 }
+
+                RaiseNewLogMessage($"{positionsList.values.Length} Depotpositionen geladen");
             }
 
             if (_depotPositionCache[depotId].Count == 0) return;
@@ -596,5 +612,7 @@ namespace Comdirect
         }
 
         #endregion
+
+       
     }
 }

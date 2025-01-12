@@ -28,6 +28,7 @@ public class ComdirectAPI
     private string _client_secret; // Client Secret
     private LoginResponse? _loginResponse;
     private ClientSession _clientSession;
+    private ClientRequestId _clientRequestId;
     private ServerSession? _serverSession;
     private TanChallengeResponse? _tanChallengeResponse;
     private CDSecondaryResponse? _cdSecondaryResponse;
@@ -41,7 +42,6 @@ public class ComdirectAPI
     // HTTPClient
     HttpClient _httpClient;
 
-
     public ComdirectAPI(string username, string password, string client_id, string client_secret)
     {
         _username = username;
@@ -49,6 +49,7 @@ public class ComdirectAPI
         _client_id = client_id;
         _client_secret = client_secret;
         _clientSession = new ClientSession();
+        _clientRequestId = new ClientRequestId(_clientSession);
 
         // Setup HttpClient
         var retryPipeline = new ResiliencePipelineBuilder<HttpResponseMessage>()
@@ -73,6 +74,13 @@ public class ComdirectAPI
     }
 
     #region 2.Login
+
+    private void AddBasicLoginHeaders(HttpRequestMessage request)
+    {
+        request.Headers.Add("Authorization", $"Bearer {_loginResponse?.access_token}");
+        request.Headers.Add("Accept", "application/json");
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
+    }
 
     /// <summary>Step 1: Generate AccessToken</summary>
     /// <returns>True when an access tokes was received</returns>
@@ -101,9 +109,7 @@ public class ComdirectAPI
     public async Task<bool> GetSessionStatus()
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/session/clients/user/v1/sessions");
-        request.Headers.Add("Authorization", $"Bearer {_loginResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize<ClientSession>(_clientSession) +"}");
+        AddBasicLoginHeaders(request);
 
         var response = await _httpClient.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -129,22 +135,20 @@ public class ComdirectAPI
         _serverSession.activated2FA = true;
 
         var request = new HttpRequestMessage(HttpMethod.Post, $"{API_BASE_URL}/api/session/clients/user/v1/sessions/{_serverSession.identifier}/validate");
-        request.Headers.Add("Authorization", $"Bearer {_loginResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
-        
+        AddBasicLoginHeaders(request);
+
         // Force Challenge Type
         if (!string.IsNullOrEmpty(forceChallengeType))
         {
-            request.Headers.Add("x-once-authentication-info", "{\"typ\":\""+ forceChallengeType + "\"}");
+            request.Headers.Add("x-once-authentication-info", "{\"typ\":\"" + forceChallengeType + "\"}");
         }
-        
+
         request.Content = new StringContent(JsonSerializer.Serialize(_serverSession), Encoding.UTF8, "application/json");
-       
+
         var response = await _httpClient.SendAsync(request);
 
         if (response.StatusCode != HttpStatusCode.Created) return false;
-        
+
         string tan_challenge_data = response.Headers.GetValues("x-once-authentication-info").First().ToString();
         _tanChallengeResponse = JsonSerializer.Deserialize<TanChallengeResponse>(tan_challenge_data);
         return true;
@@ -169,10 +173,8 @@ public class ComdirectAPI
         if (_tanChallengeResponse == null) return false; // Called in wrong order?
 
         var request = new HttpRequestMessage(HttpMethod.Patch, $"{API_BASE_URL}/api/session/clients/user/v1/sessions/{_serverSession.identifier}");
-        request.Headers.Add("Authorization", $"Bearer {_loginResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
-        request.Headers.Add("x-once-authentication-info", "{\"id\": \""+_tanChallengeResponse.id+"\"}");
+        AddBasicLoginHeaders(request);
+        request.Headers.Add("x-once-authentication-info", "{\"id\": \"" + _tanChallengeResponse.id + "\"}");
         if (!string.IsNullOrEmpty(tan))
         {
             request.Headers.Add("x-once-authentication", tan);
@@ -221,13 +223,12 @@ public class ComdirectAPI
         var request = new HttpRequestMessage(HttpMethod.Delete, $"{API_BASE_URL}/oauth/revoke");
         request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
         request.Headers.Add("Accept", "application/json");
-        // request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
 
         var response = await _httpClient.SendAsync(request);
 
         var responseContent = await response.Content.ReadAsStringAsync();
         return response.StatusCode == HttpStatusCode.NoContent;
-        
+
     }
     public async Task<bool> RefreshSession()
     {
@@ -258,7 +259,7 @@ public class ComdirectAPI
         _cdSecondaryResponse.expires_in = responseData.expires_in;
         _cdSecondaryResponse.refresh_token = responseData.refresh_token;
         OnSessionTimeoutChanged?.Invoke(responseData.expires_in - 2); // Subtract 2 seconds as we don't want to wait until the last second to refresh it
-        
+
         return true;
     }
 
@@ -273,15 +274,15 @@ public class ComdirectAPI
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/banking/clients/user/v2/accounts/balances");
         request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
         request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
-        
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
+
         var response = await _httpClient.SendAsync(request);
 
         var responseContent = await response.Content.ReadAsStringAsync();
         if (response.StatusCode != HttpStatusCode.OK) return null;
         if (responseContent == null) return null;
 
-         return JsonSerializer.Deserialize<AccountBalanceListResponse>(responseContent);
+        return JsonSerializer.Deserialize<AccountBalanceListResponse>(responseContent);
     }
 
     public async Task<AccountBalanceResponse?> GetAccountBalance(string accountId)
@@ -292,7 +293,7 @@ public class ComdirectAPI
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/banking/v2/accounts/{accountId}/balances");
         request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
         request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
 
         var response = await _httpClient.SendAsync(request);
 
@@ -311,7 +312,7 @@ public class ComdirectAPI
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/banking/v2/accounts/{accountId}/transactions");
         request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
         request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
 
         var response = await _httpClient.SendAsync(request);
 
@@ -334,7 +335,7 @@ public class ComdirectAPI
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/brokerage/clients/user/v3/depots");
         request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
         request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
 
         var response = await _httpClient.SendAsync(request);
 
@@ -353,7 +354,7 @@ public class ComdirectAPI
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/brokerage/v3/depots/{depotId}/positions?with-attr=instrument");
         request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
         request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
 
         var response = await _httpClient.SendAsync(request);
 
@@ -372,7 +373,7 @@ public class ComdirectAPI
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/brokerage/v3/depots/{depotId}/transactions");
         request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
         request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
 
         var response = await _httpClient.SendAsync(request);
 
@@ -408,7 +409,7 @@ public class ComdirectAPI
         // Default values when paging-first & paging-count is not set
         int defaultStartValue = 0;
         int defaultPageSize = 20;
-        
+
         return await GetDocuments(defaultStartValue, defaultPageSize);
     }
 
@@ -420,7 +421,7 @@ public class ComdirectAPI
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/messages/clients/user/v2/documents?paging-first={start}&paging-count={count}");
         request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
         request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
 
         var response = await _httpClient.SendAsync(request);
 
@@ -441,7 +442,7 @@ public class ComdirectAPI
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/messages/v2/documents/{documentId}");
         request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
         request.Headers.Add("Accept", mimetype);
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
 
         var response = await _httpClient.SendAsync(request);
 
@@ -464,7 +465,7 @@ public class ComdirectAPI
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/reports/participants/user/v1/allbalances");
         request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
         request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", "{\"clientRequestId\":" + JsonSerializer.Serialize(_clientSession) + "}");
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
 
         var response = await _httpClient.SendAsync(request);
 

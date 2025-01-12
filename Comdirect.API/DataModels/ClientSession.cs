@@ -10,3 +10,14 @@ public class ClientSession
         requestId = DateTime.Now.ToString("HHmmssfff");
     }
 }
+
+internal class ClientRequestId
+{
+    public ClientSession clientRequestId { get; init; }
+
+    public ClientRequestId(ClientSession _clientRequestId)
+    {
+        clientRequestId = _clientRequestId;
+    }
+}
+

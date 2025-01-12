@@ -15,7 +15,7 @@ namespace Comdirect
         {
             var builder = new ConfigurationBuilder()
            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-           .AddUserSecrets(Assembly.GetExecutingAssembly(), false);
+           .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
             Configuration = builder.Build();
 
             ApplicationConfiguration.Initialize();
