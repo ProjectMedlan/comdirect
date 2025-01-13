@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>af4f995e-b187-44ce-8573-111ed20bdc93</UserSecretsId>
     <Copyright>(c) Project Medlan</Copyright>
-	<Version>1.0.0.1</Version>
+	<Version>1.0.0.2</Version>
 	<Authors>Markus Liebl</Authors>
   </PropertyGroup>
 

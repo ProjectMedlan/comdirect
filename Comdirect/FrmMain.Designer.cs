@@ -69,7 +69,9 @@
             chDepotPositionCurrentValue = new ColumnHeader();
             chDepotPositionTotalChange = new ColumnHeader();
             tabPagePostbox = new TabPage();
-            btnPostboxRefresh = new Button();
+            lblPostBoxProgress = new Label();
+            btnPostboxPrevious = new Button();
+            btnPostboxNext = new Button();
             btnDownloadDocuments = new Button();
             cbOnlyNew = new CheckBox();
             lvwPostBox = new ListView();
@@ -433,7 +435,9 @@
             // 
             // tabPagePostbox
             // 
-            tabPagePostbox.Controls.Add(btnPostboxRefresh);
+            tabPagePostbox.Controls.Add(lblPostBoxProgress);
+            tabPagePostbox.Controls.Add(btnPostboxPrevious);
+            tabPagePostbox.Controls.Add(btnPostboxNext);
             tabPagePostbox.Controls.Add(btnDownloadDocuments);
             tabPagePostbox.Controls.Add(cbOnlyNew);
             tabPagePostbox.Controls.Add(lvwPostBox);
@@ -445,15 +449,34 @@
             tabPagePostbox.Text = "Postbox";
             tabPagePostbox.UseVisualStyleBackColor = true;
             // 
-            // btnPostboxRefresh
+            // lblPostBoxProgress
             // 
-            btnPostboxRefresh.Location = new Point(6, 8);
-            btnPostboxRefresh.Name = "btnPostboxRefresh";
-            btnPostboxRefresh.Size = new Size(75, 23);
-            btnPostboxRefresh.TabIndex = 3;
-            btnPostboxRefresh.Text = "Refresh";
-            btnPostboxRefresh.UseVisualStyleBackColor = true;
-            btnPostboxRefresh.Click += btnPostboxRefresh_Click;
+            lblPostBoxProgress.AutoSize = true;
+            lblPostBoxProgress.Location = new Point(87, 13);
+            lblPostBoxProgress.Name = "lblPostBoxProgress";
+            lblPostBoxProgress.Size = new Size(16, 15);
+            lblPostBoxProgress.TabIndex = 6;
+            lblPostBoxProgress.Text = "...";
+            // 
+            // btnPostboxPrevious
+            // 
+            btnPostboxPrevious.Location = new Point(6, 8);
+            btnPostboxPrevious.Name = "btnPostboxPrevious";
+            btnPostboxPrevious.Size = new Size(75, 23);
+            btnPostboxPrevious.TabIndex = 5;
+            btnPostboxPrevious.Text = "Zu&rück";
+            btnPostboxPrevious.UseVisualStyleBackColor = true;
+            btnPostboxPrevious.Click += btnPostboxPrevious_Click;
+            // 
+            // btnPostboxNext
+            // 
+            btnPostboxNext.Location = new Point(211, 9);
+            btnPostboxNext.Name = "btnPostboxNext";
+            btnPostboxNext.Size = new Size(75, 23);
+            btnPostboxNext.TabIndex = 4;
+            btnPostboxNext.Text = "Wei&ter";
+            btnPostboxNext.UseVisualStyleBackColor = true;
+            btnPostboxNext.Click += btnPostboxNext_Click;
             // 
             // btnDownloadDocuments
             // 
@@ -472,11 +495,11 @@
             cbOnlyNew.AutoSize = true;
             cbOnlyNew.Checked = true;
             cbOnlyNew.CheckState = CheckState.Checked;
-            cbOnlyNew.Location = new Point(646, 12);
+            cbOnlyNew.Location = new Point(596, 11);
             cbOnlyNew.Name = "cbOnlyNew";
-            cbOnlyNew.Size = new Size(109, 19);
+            cbOnlyNew.Size = new Size(159, 19);
             cbOnlyNew.TabIndex = 1;
-            cbOnlyNew.Text = "Nur ungelesene";
+            cbOnlyNew.Text = "Nur ungelesene anzeigen";
             cbOnlyNew.UseVisualStyleBackColor = true;
             cbOnlyNew.CheckedChanged += cbOnlyNew_CheckedChanged;
             // 
@@ -544,6 +567,7 @@
             Text = "Mein Comdirect";
             FormClosing += FrmMain_FormClosing;
             Load += FrmMain_Load;
+            Shown += FrmMain_Shown;
             grpLogin.ResumeLayout(false);
             grpLogin.PerformLayout();
             grpAccounts.ResumeLayout(false);
@@ -587,7 +611,6 @@
         private Button btnSessionTimeout;
         private Label lblSessionTimeoutText;
         private Label lblSessionTimeout;
-        private Button btnPostboxRefresh;
         private ListView lvwAccountTransactions;
         private ColumnHeader chCheckbox;
         private TabPage tabPageDepotTransactions;
@@ -611,5 +634,8 @@
         private TextBox txtClientID;
         private Label lblClientSecret;
         private Label lblClientID;
+        private Label lblPostBoxProgress;
+        private Button btnPostboxPrevious;
+        private Button btnPostboxNext;
     }
 }

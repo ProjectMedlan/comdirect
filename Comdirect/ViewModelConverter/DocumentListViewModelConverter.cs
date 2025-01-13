@@ -38,7 +38,10 @@ public static class DocumentListViewModelConverter
         viewModel.IsRead = document.documentMetaData.alreadyRead;
         viewModel.ReadDate = ConverterHelper.ParseDate(document.documentMetaData.dateRead);
         viewModel.CategoryID = document.categoryId;
-        viewModel.CategoryName = Constants.DOCUMENT_CATEGORIES[document.categoryId];
+        if (Constants.DOCUMENT_CATEGORIES.ContainsKey(document.categoryId))
+            viewModel.CategoryName = Constants.DOCUMENT_CATEGORIES[document.categoryId];
+        else
+            viewModel.CategoryName = $"Unbekannte Kategorie ({document.categoryId})";
 
         return viewModel;
     }

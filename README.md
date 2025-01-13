@@ -73,8 +73,6 @@ Die Demo Applikation geht im Moment davon aus, dass die zurückgelieferten Werte
 ### UI
 - ToolTips im ListView für alle Spalten ermöglichen (https://stackoverflow.com/questions/2648281/listview-tooltip-only-in-first-cell-vb-net)
 - Einstellungsdialog
-- Postbox: Durchblättern aller Nachrichten
-- Postbox: Filtermöglichkeiten
 - Transaktionen & Positionen: Durchblättern & Filtern
 - ListViews: Sortierungen hinzufügen
 - Projekt mit Icons aufhübschen
@@ -82,6 +80,11 @@ Die Demo Applikation geht im Moment davon aus, dass die zurückgelieferten Werte
 ## Changelog
 
 Eine Übersicht über Änderungen und Updates im Projekt.
+
+- 1.0.0.2 (13.01.2025)
+  - Unbekannte Postbox Kategorie sorgt nicht mehr für einen Absturz
+  - Eingabefelder erhalten jetzt den Fokus beim Start
+  - Navigieren durch die Postbox ermöglicht
 
 - 1.0.0.1 (12.01.2025)
   - UserSecrets Datei ist jetzt optional

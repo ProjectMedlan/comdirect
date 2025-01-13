@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using Comdirect.BLL;
 
 namespace Comdirect
 {
@@ -17,8 +18,8 @@ namespace Comdirect
         private const Enumerations.LogTypes _logLevel = Enumerations.LogTypes.Debug | Enumerations.LogTypes.Info | Enumerations.LogTypes.Warning | Enumerations.LogTypes.Error;
         private const int AUTO_SESSION_REFRESH_LIMIT = 20;
         private const int BULK_REQUEST_RATE_LIMIT_DELAY = 250;
+        private const int MAX_POSTBOX_ITEMS_PER_REQUEST = 20; // Max 20 items per request (default)
 
-        private DocumentListViewModel? _lastDocumentList;
         private ReportViewModel? _lastReport;
         private Dictionary<string, List<AccountTransactionViewModel>> _accountTransactionCache = new Dictionary<string, List<AccountTransactionViewModel>>();
 
@@ -26,6 +27,8 @@ namespace Comdirect
         private Dictionary<string, List<DepotTransactionViewModel>> _depotTransactionCache = new Dictionary<string, List<DepotTransactionViewModel>>();
         private Dictionary<string, List<DepotPositionViewModel>> _depotPositionCache = new Dictionary<string, List<DepotPositionViewModel>>();
         private Dictionary<string, List<DepotDetailsViewModel>> _depotDetailsCache = new Dictionary<string, List<DepotDetailsViewModel>>();
+
+        private PostboxNavigator? _postboxNavigator;
 
         private int _currentSessionTimeout = 0;
 
@@ -45,6 +48,10 @@ namespace Comdirect
             txtClientID.Text = _userSettings?.ClientID;
             txtClientSecret.Text = _userSettings?.ClientSecret;
             txtUsername.Text = _userSettings?.Username;
+        }
+
+        private void FrmMain_Shown(object sender, EventArgs e)
+        {
             if (!string.IsNullOrEmpty(txtUsername.Text))
             {
                 txtPassword.Focus();
@@ -62,7 +69,8 @@ namespace Comdirect
             {
                 btnLogin.Text = "Logout";
                 await LoadReport();
-                await RefreshPostBox(cbOnlyNew.Checked, true);
+                await LoadPostBoxEntries(1);
+                _postboxNavigator?.Refresh();
             }
             else
             {
@@ -391,50 +399,79 @@ namespace Comdirect
 
         #region Postbox
 
-        private async Task RefreshPostBox(bool onlyNewEntries, bool forceReload)
+        private async void btnPostboxNext_Click(object sender, EventArgs e)
+        {
+            if (_postboxNavigator == null) return;
+
+            // Check if cache is filled for next page
+            if (!_postboxNavigator.HasDataForNextPage())
+            {
+                btnPostboxNext.Enabled = false;
+                await LoadPostBoxEntries(_postboxNavigator.CurrentPage + 1);
+                btnPostboxNext.Enabled = true;
+            }
+
+            _postboxNavigator.NextPage();
+        }
+
+        private void btnPostboxPrevious_Click(object sender, EventArgs e)
+        {
+            if (_postboxNavigator == null) return;
+
+            _postboxNavigator.PreviousPage();
+        }
+
+        private async Task LoadPostBoxEntries(int currentPage)
         {
             if (_comdirectAPI == null) return;
 
-            // Reload data from API or use cached data
-            if (forceReload || _lastDocumentList == null)
+            var postboxData = await _comdirectAPI.GetDocuments((currentPage - 1) * MAX_POSTBOX_ITEMS_PER_REQUEST, MAX_POSTBOX_ITEMS_PER_REQUEST);
+            if (postboxData != null)
             {
-                var postboxData = await _comdirectAPI.GetDocuments();
-                if (postboxData != null)
+                var documentListViewModel = postboxData.ConvertToViewModel();
+
+                if (_postboxNavigator == null)
                 {
-                    var documentListViewModel = postboxData.ConvertToViewModel();
-                    _lastDocumentList = documentListViewModel;
-                    RaiseNewLogMessage(Enumerations.LogTypes.Info, $"Sie haben {_lastDocumentList.TotalUnreadDocuments} ungelesene Nachrichten in der Postbox");
+                    _postboxNavigator = new PostboxNavigator(documentListViewModel.TotalDocuments, MAX_POSTBOX_ITEMS_PER_REQUEST);
+                    _postboxNavigator.OnDocumentsToViewChanged += ListPostboxDocuments;
+                    _postboxNavigator.CurrentProgressChanged += PostboxProgressChanged;
+                    RaiseNewLogMessage(Enumerations.LogTypes.Info, $"Sie haben {documentListViewModel.TotalUnreadDocuments} ungelesene Nachrichten in der Postbox");
                 }
-            }
 
-            if (_lastDocumentList != null)
-            {
-                lvwPostBox.Items.Clear();
-                lvwPostBox.SuspendLayout();
-                foreach (var item in _lastDocumentList.Documents)
-                {
-                    if (onlyNewEntries && item.IsRead) continue;
-
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Tag = item;
-                    lvi.Text = string.Empty; // No Content - just checkboxes
-                    lvi.SubItems.Add(item.CreationDate?.ToString("dd.MM.yyyy"));
-                    lvi.SubItems.Add(item.Name);
-
-                    if (!item.IsRead)
-                    {
-                        lvi.Font = new Font(lvi.Font, FontStyle.Bold);
-                    }
-
-                    lvwPostBox.Items.Add(lvi);
-                }
-                lvwPostBox.ResumeLayout();
+                _postboxNavigator.AddDocuments(documentListViewModel.Documents);
             }
         }
 
-        private async void btnPostboxRefresh_Click(object sender, EventArgs e)
+        private void PostboxProgressChanged(string message)
         {
-            await RefreshPostBox(cbOnlyNew.Checked, true);
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<string>(PostboxProgressChanged), message);
+                return;
+            }
+            lblPostBoxProgress.Text = message;
+        }
+
+        private void ListPostboxDocuments(List<DocumentViewModel> currentList)
+        {
+            lvwPostBox.Items.Clear();
+            lvwPostBox.SuspendLayout();
+            foreach (var item in currentList)
+            {
+                ListViewItem lvi = new ListViewItem();
+                lvi.Tag = item;
+                lvi.Text = string.Empty; // No Content - just checkboxes
+                lvi.SubItems.Add(item.CreationDate?.ToString("dd.MM.yyyy"));
+                lvi.SubItems.Add(item.Name);
+
+                if (!item.IsRead)
+                {
+                    lvi.Font = new Font(lvi.Font, FontStyle.Bold);
+                }
+
+                lvwPostBox.Items.Add(lvi);
+            }
+            lvwPostBox.ResumeLayout();
         }
 
         private async void btnDownloadDocuments_Click(object sender, EventArgs e)
@@ -486,14 +523,14 @@ namespace Comdirect
             }
 
             SetStatusText("");
-            await RefreshPostBox(cbOnlyNew.Checked, false); // Force view to update in case I set some of the documents to read
+            _postboxNavigator?.Refresh(); // Force view to update in case I set some of the documents to read
             btnDownloadDocuments.Enabled = true;
             lvwPostBox.Enabled = true;
         }
 
-        private async void cbOnlyNew_CheckedChanged(object sender, EventArgs e)
+        private void cbOnlyNew_CheckedChanged(object sender, EventArgs e)
         {
-            await RefreshPostBox(cbOnlyNew.Checked, false);
+            _postboxNavigator?.SetFilter(cbOnlyNew.Checked);
         }
 
         private void lvwPostBox_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -612,6 +649,10 @@ namespace Comdirect
         }
 
         #endregion
+
+
+
+
 
        
     }
