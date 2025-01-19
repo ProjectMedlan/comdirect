@@ -2,15 +2,9 @@
 
 public class DepotPositionListResponse
 {
-    public DepotPositionListPaging paging { get; set; }
+    public ComdirectPaging paging { get; set; }
     public DepotPositionListAggregated aggregated { get; set; }
     public DepotPosition[] values { get; set; }
-}
-
-public class DepotPositionListPaging
-{
-    public int index { get; set; }
-    public int matches { get; set; }
 }
 
 public class DepotPositionListAggregated
@@ -85,7 +79,7 @@ public class DepotPosition
     public DepotPositionListProfitlossprevdayabs1 profitLossPrevDayAbs { get; set; }
     public string profitLossPrevDayRel { get; set; }
     public DepotPositionListProfitlossprevdaytotalabs profitLossPrevDayTotalAbs { get; set; }
-    public DepotPositionListInstrument instrument { get; set; }
+    public ComdirectInstrument instrument { get; set; }
     public object version { get; set; }
     public string hedgeability { get; set; }
     public DepotPositionListAvailablequantitytohedge availableQuantityToHedge { get; set; }
@@ -109,7 +103,7 @@ public class DepotPositionListCurrentprice
 {
     public DepotPositionListPrice price { get; set; }
     public DateTime priceDateTime { get; set; }
-    public DepotPositionListVenue venue { get; set; }
+    public DepotPositionListVenue? venue { get; set; }
 }
 
 public class DepotPositionListPrice
@@ -136,7 +130,7 @@ public class DepotPositionListPrevdayprice
 {
     public DepotPositionListPrice price { get; set; }
     public DateTime priceDateTime { get; set; }
-    public DepotPositionListVenue venue { get; set; }
+    public DepotPositionListVenue? venue { get; set; }
 }
 
 public class DepotPositionListCurrentvalue1
@@ -167,30 +161,6 @@ public class DepotPositionListProfitlossprevdaytotalabs
 {
     public string value { get; set; }
     public string unit { get; set; }
-}
-
-public class DepotPositionListInstrument
-{
-    public string instrumentId { get; set; }
-    public string wkn { get; set; }
-    public string isin { get; set; }
-    public string mnemonic { get; set; }
-    public string name { get; set; }
-    public string shortName { get; set; }
-    public DepotPositionListStaticdata staticData { get; set; }
-}
-
-public class DepotPositionListStaticdata
-{
-    public string notation { get; set; }
-    public string currency { get; set; }
-    public string instrumentType { get; set; }
-    public bool priipsRelevant { get; set; }
-    public bool kidAvailable { get; set; }
-    public bool shippingWaiverRequired { get; set; }
-    public bool fundRedemptionLimited { get; set; }
-    public string savingsPlanEligibility { get; set; }
-    public string sector { get; set; }
 }
 
 public class DepotPositionListAvailablequantitytohedge

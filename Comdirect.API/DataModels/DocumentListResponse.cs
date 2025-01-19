@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Comdirect.API.DataModels;
+﻿namespace Comdirect.API.DataModels;
 public class DocumentListResponse
 {
-    public DocumentListPaging paging { get; set; }
+    public ComdirectPaging paging { get; set; }
     public DocumentListAggregated aggregated { get; set; }
     public Document[] values { get; set; }
-}
-
-public class DocumentListPaging
-{
-    public int index { get; set; }
-    public int matches { get; set; }
 }
 
 public class DocumentListAggregated

@@ -1,14 +1,8 @@
 ﻿namespace Comdirect.API.DataModels;
 public class DepotResponseList
 {
-    public DepotResponsePaging paging { get; set; }
+    public ComdirectPaging paging { get; set; }
     public DepotResponse[] values { get; set; }
-}
-
-public class DepotResponsePaging
-{
-    public int index { get; set; }
-    public int matches { get; set; }
 }
 
 public class DepotResponse

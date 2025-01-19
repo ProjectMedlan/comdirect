@@ -18,15 +18,7 @@ public static class DepotTransactionViewModelConverter
         viewModel.ExecutionPrice = ConverterHelper.ParseDecimal(response.executionPrice.value);
         viewModel.TransactionValue = ConverterHelper.ParseDecimal(response.transactionValue.value);
         viewModel.TransactionType = response.transactionType;
-        viewModel.Instrument = new InstrumentViewModel();
-        viewModel.Instrument.InstrumentId = response.instrument.instrumentId;
-        viewModel.Instrument.WKN = response.instrument.wkn;
-        viewModel.Instrument.ISIN = response.instrument.isin;
-        viewModel.Instrument.Mnemonic = response.instrument.mnemonic;
-        viewModel.Instrument.Name = response.instrument.name;
-        viewModel.Instrument.ShortName = response.instrument.shortName;
-        viewModel.Instrument.InstrumentType = response.instrument.staticData.instrumentType;
-
+        viewModel.Instrument = InstrumentViewModelConverter.ConvertToViewModel(response.instrument);
         return viewModel;
     }
 }

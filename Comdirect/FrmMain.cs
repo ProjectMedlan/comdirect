@@ -37,6 +37,9 @@ namespace Comdirect
         private const int WM_VSCROLL = 277;
         private const int SB_PAGEBOTTOM = 7;
 
+        private ToolTip _listViewToolTip = new ToolTip();
+        private Point _listViewHoverPosition = new Point(-1, -1);
+
         public FrmMain()
         {
             InitializeComponent();
@@ -552,6 +555,30 @@ namespace Comdirect
 
         #endregion
 
+        #region ListView ToolTip Fix
+        // https://stackoverflow.com/questions/13069137/how-to-set-tooltip-for-a-listviewsubitem
+
+        private void listview_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Funktioniert so noch nicht
+            // Flackert
+            // ToolTips bleiben hängen
+            // Eigentlich bräuchte man das auch nur für die SubItems, da es bei den Items ja klappt
+            // Text zurücksetzten, wenn es keinen Tooltip gibt
+            
+            //ListView listView = (ListView)sender;
+            //ListViewHitTestInfo info = listView.HitTest(e.X, e.Y);
+            //if (info.Item == null) return;
+            //if (_listViewHoverPosition == e.Location) return;
+            //_listViewHoverPosition = e.Location;
+
+            //// _listViewToolTip.SetToolTip(listView, string.Empty);
+
+            //_listViewToolTip.Show(info.Item.ToolTipText, listView, e.X, e.Y, 20000);
+        }
+
+        #endregion
+
         #region Logging & Status
         private void RaiseNewLogMessage(string message)
         {
@@ -649,11 +676,5 @@ namespace Comdirect
         }
 
         #endregion
-
-
-
-
-
-       
     }
 }

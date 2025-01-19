@@ -10,6 +10,3 @@ public class CDSecondaryResponse
     public int bpid { get; set; }
     public long kontaktId { get; set; }
 }
-
-
-

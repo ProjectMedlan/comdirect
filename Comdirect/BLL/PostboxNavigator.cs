@@ -1,6 +1,9 @@
 ﻿using Comdirect.ViewModels;
 
 namespace Comdirect.BLL;
+/// <summary>
+/// Class for navigating through the postbox (with cache);
+/// </summary>
 internal class PostboxNavigator
 {
     public int TotalCount { get; set; }
@@ -46,6 +49,10 @@ internal class PostboxNavigator
 
     public void Refresh()
     {
+        // Items could now be 'read' - relod
+        TotalCountWithFilter = DocumentCache.Where(x => !x.IsRead).Count();
+        TotalPagesWithFilter = Math.Max(1, (int)Math.Ceiling((double)TotalCountWithFilter / ItemsPerPage));
+
         PushChanges();
     }
 

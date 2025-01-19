@@ -21,8 +21,8 @@ $${\color{red}Achtung:}$$  Sollte man die TAN Eingabe mehrfach hintereinander ab
 - Konten: Transaktionen auflisten
 - Depot: Transaktionen auflisten
 - Depot: Positionen auflisten
-- Postbox: Nachrichten auflisten
-- Postbox: **Alle** Nachrichten auf einmal herunterladen
+- Postbox: Nachrichten auflisten & durchblättern
+- Postbox: Angezeigte Nachrichten auf einmal herunterladen
 
 ## Installation
 
@@ -61,17 +61,21 @@ Folgende Einschränkungen sind zu beachten
 
 Die Demo Applikation geht im Moment davon aus, dass die zurückgelieferten Werte in Euro sind. (Was sie im Regelfall auch sind)
 
+### Bekannte Bugs
+
+Ich glaube das es ein Problem sein könnte, wenn man viele ungelesene Nachrichten hat und diese dann herunterlädt, dass
+es dann bei der Berechnung der Seitenanzahl zu Fehler kommen könnte.
+
 ## Geplante Änderungen
 
 ### API
-- Doppelte Elemente in den Response Klassen zusammenfassen
-- InstrumentViewModel Mapper hinzufügen (doppelten Code vermeiden)
+- Doppelte Elemente in den Response Klassen zusammenfassen (in Bearbeitung)
 - API-Requests Refactoring: Doppelte Code Blöcke zusammenfassen
 - Exception Handling hinzufügen
 - Kompiler-Warnungen beheben
 
 ### UI
-- ToolTips im ListView für alle Spalten ermöglichen (https://stackoverflow.com/questions/2648281/listview-tooltip-only-in-first-cell-vb-net)
+- ToolTips im ListView für alle Spalten ermöglichen (in Bearbeitung) (https://stackoverflow.com/questions/13069137/how-to-set-tooltip-for-a-listviewsubitem)
 - Einstellungsdialog
 - Transaktionen & Positionen: Durchblättern & Filtern
 - ListViews: Sortierungen hinzufügen
@@ -80,6 +84,9 @@ Die Demo Applikation geht im Moment davon aus, dass die zurückgelieferten Werte
 ## Changelog
 
 Eine Übersicht über Änderungen und Updates im Projekt.
+
+- 1.0.0.3 (19.01.2025)
+  - Code Optimierungen
 
 - 1.0.0.2 (13.01.2025)
   - Unbekannte Postbox Kategorie sorgt nicht mehr für einen Absturz

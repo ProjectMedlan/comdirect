@@ -2,15 +2,9 @@
 
 public class ReportResponse
 {
-    public ReportPaging paging { get; set; }
+    public ComdirectPaging paging { get; set; }
     public ReportAggregated aggregated { get; set; }
     public Report[] values { get; set; }
-}
-
-public class ReportPaging
-{
-    public int index { get; set; }
-    public int matches { get; set; }
 }
 
 public class ReportAggregated

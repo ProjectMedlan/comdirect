@@ -245,6 +245,7 @@
             lvwAccounts.UseCompatibleStateImageBehavior = false;
             lvwAccounts.View = View.Details;
             lvwAccounts.SelectedIndexChanged += lvwAccounts_SelectedIndexChanged;
+            lvwAccounts.MouseMove += listview_MouseMove;
             // 
             // chName
             // 
@@ -311,6 +312,7 @@
             lvwAccountTransactions.TabIndex = 0;
             lvwAccountTransactions.UseCompatibleStateImageBehavior = false;
             lvwAccountTransactions.View = View.Details;
+            lvwAccountTransactions.MouseMove += listview_MouseMove;
             // 
             // chAccountTransactionDate
             // 
@@ -358,6 +360,7 @@
             lvwDepotTransactions.TabIndex = 0;
             lvwDepotTransactions.UseCompatibleStateImageBehavior = false;
             lvwDepotTransactions.View = View.Details;
+            lvwDepotTransactions.MouseMove += listview_MouseMove;
             // 
             // chDepotTransactionBookingDate
             // 
@@ -409,6 +412,7 @@
             lvwDepotPositions.TabIndex = 0;
             lvwDepotPositions.UseCompatibleStateImageBehavior = false;
             lvwDepotPositions.View = View.Details;
+            lvwDepotPositions.MouseMove += listview_MouseMove;
             // 
             // chDepotPositionName
             // 
@@ -518,6 +522,7 @@
             lvwPostBox.View = View.Details;
             lvwPostBox.ColumnClick += lvwPostBox_ColumnClick;
             lvwPostBox.ItemChecked += lvwPostBox_ItemChecked;
+            lvwPostBox.MouseMove += listview_MouseMove;
             // 
             // chCheckbox
             // 

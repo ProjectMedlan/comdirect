@@ -2,15 +2,9 @@
 
 public class AccountTransactionListResponse
 {
-    public AccountTransactionPaging paging { get; set; }
+    public ComdirectPaging paging { get; set; }
     public AccountTransactionAggregated aggregated { get; set; }
     public AccountTransaction[] values { get; set; }
-}
-
-public class AccountTransactionPaging
-{
-    public int index { get; set; }
-    public int matches { get; set; }
 }
 
 public class AccountTransactionAggregated
