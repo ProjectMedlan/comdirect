@@ -32,3 +32,8 @@ public class ComdirectPaging
     public int index { get; set; }
     public int matches { get; set; }
 }
+public class Balance
+{
+    public string value { get; set; }
+    public string unit { get; set; }
+}

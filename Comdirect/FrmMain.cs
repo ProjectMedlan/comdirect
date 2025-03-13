@@ -7,6 +7,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Comdirect.BLL;
+using System.Diagnostics.CodeAnalysis;
+using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Comdirect
 {
@@ -39,6 +42,7 @@ namespace Comdirect
 
         private ToolTip _listViewToolTip = new ToolTip();
         private Point _listViewHoverPosition = new Point(-1, -1);
+        private ListViewItem? _lastListViewItem = null;
 
         public FrmMain()
         {
@@ -557,24 +561,27 @@ namespace Comdirect
 
         #region ListView ToolTip Fix
         // https://stackoverflow.com/questions/13069137/how-to-set-tooltip-for-a-listviewsubitem
-
+                
         private void listview_MouseMove(object sender, MouseEventArgs e)
         {
-            // Funktioniert so noch nicht
-            // Flackert
-            // ToolTips bleiben hängen
-            // Eigentlich bräuchte man das auch nur für die SubItems, da es bei den Items ja klappt
-            // Text zurücksetzten, wenn es keinen Tooltip gibt
-            
-            //ListView listView = (ListView)sender;
-            //ListViewHitTestInfo info = listView.HitTest(e.X, e.Y);
-            //if (info.Item == null) return;
-            //if (_listViewHoverPosition == e.Location) return;
-            //_listViewHoverPosition = e.Location;
+            ListView listView = (ListView)sender;
+            ListViewHitTestInfo info = listView.HitTest(e.X, e.Y);
 
-            //// _listViewToolTip.SetToolTip(listView, string.Empty);
+            if (info.Item == null)
+            {
+                _listViewToolTip.RemoveAll();
+                _lastListViewItem = null;
+                return;
+            }
 
-            //_listViewToolTip.Show(info.Item.ToolTipText, listView, e.X, e.Y, 20000);
+            if (_listViewHoverPosition == e.Location) return;
+            _listViewHoverPosition = e.Location;
+
+            if (info.Item != _lastListViewItem)
+            {
+                _lastListViewItem = info.Item;
+                _listViewToolTip.Show(info.Item.ToolTipText, listView, e.X, e.Y, 20000);
+            }
         }
 
         #endregion

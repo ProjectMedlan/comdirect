@@ -69,13 +69,11 @@ es dann bei der Berechnung der Seitenanzahl zu Fehler kommen könnte.
 ## Geplante Änderungen
 
 ### API
-- Doppelte Elemente in den Response Klassen zusammenfassen (in Bearbeitung)
 - API-Requests Refactoring: Doppelte Code Blöcke zusammenfassen
 - Exception Handling hinzufügen
 - Kompiler-Warnungen beheben
 
 ### UI
-- ToolTips im ListView für alle Spalten ermöglichen (in Bearbeitung) (https://stackoverflow.com/questions/13069137/how-to-set-tooltip-for-a-listviewsubitem)
 - Einstellungsdialog
 - Transaktionen & Positionen: Durchblättern & Filtern
 - ListViews: Sortierungen hinzufügen
@@ -84,6 +82,10 @@ es dann bei der Berechnung der Seitenanzahl zu Fehler kommen könnte.
 ## Changelog
 
 Eine Übersicht über Änderungen und Updates im Projekt.
+
+- 1.0.0.4 (XX.XX.2025)
+  - Einige redundante Klassen bei den Response Objekten entfernt
+  - ToolTip Fix für die ListViews hinzugefügt
 
 - 1.0.0.3 (19.01.2025)
   - Code Optimierungen

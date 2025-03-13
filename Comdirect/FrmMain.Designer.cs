@@ -239,7 +239,6 @@
             lvwAccounts.Location = new Point(6, 22);
             lvwAccounts.MultiSelect = false;
             lvwAccounts.Name = "lvwAccounts";
-            lvwAccounts.ShowItemToolTips = true;
             lvwAccounts.Size = new Size(568, 131);
             lvwAccounts.TabIndex = 4;
             lvwAccounts.UseCompatibleStateImageBehavior = false;
@@ -307,7 +306,6 @@
             lvwAccountTransactions.Location = new Point(6, 35);
             lvwAccountTransactions.MultiSelect = false;
             lvwAccountTransactions.Name = "lvwAccountTransactions";
-            lvwAccountTransactions.ShowItemToolTips = true;
             lvwAccountTransactions.Size = new Size(876, 203);
             lvwAccountTransactions.TabIndex = 0;
             lvwAccountTransactions.UseCompatibleStateImageBehavior = false;

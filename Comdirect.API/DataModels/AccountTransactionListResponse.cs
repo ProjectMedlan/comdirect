@@ -29,7 +29,7 @@ public class AccountTransaction
     public string reference { get; set; }
     public string bookingStatus { get; set; }
     public string bookingDate { get; set; }
-    public AccountTransactionTransactionvalue transactionValue { get; set; }
+    public Balance transactionValue { get; set; }
     public AccountTransactionRemitter remitter { get; set; }
     public object debtor { get; set; }
     public AccountTransactionCreditor creditor { get; set; }
@@ -43,12 +43,6 @@ public class AccountTransaction
     public string transactionTypeDisplayName { get; set; }
     public string categoryDisplayName { get; set; }
     public string transactionDirection { get; set; }
-}
-
-public class AccountTransactionTransactionvalue
-{
-    public string value { get; set; }
-    public string unit { get; set; }
 }
 
 public class AccountTransactionRemitter

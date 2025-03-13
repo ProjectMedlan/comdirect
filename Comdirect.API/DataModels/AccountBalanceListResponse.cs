@@ -10,10 +10,10 @@ public class AccountBalanceResponse
 {
     public AccountBalanceAccount account { get; set; }
     public string accountId { get; set; }
-    public AccountBalanceBalance balance { get; set; }
-    public AccountBalanceBalanceeur balanceEUR { get; set; }
-    public AccountBalanceAvailablecashamount availableCashAmount { get; set; }
-    public AccountBalanceAvailablecashamounteur availableCashAmountEUR { get; set; }
+    public Balance balance { get; set; }
+    public Balance balanceEUR { get; set; }
+    public Balance availableCashAmount { get; set; }
+    public Balance availableCashAmountEUR { get; set; }
 }
 
 public class AccountBalanceAccount
@@ -25,7 +25,7 @@ public class AccountBalanceAccount
     public AccountBalanceAccounttype accountType { get; set; }
     public string iban { get; set; }
     public string bic { get; set; }
-    public AccountBalanceCreditlimit creditLimit { get; set; }
+    public Balance creditLimit { get; set; }
 }
 
 public class AccountBalanceAccounttype
@@ -34,34 +34,6 @@ public class AccountBalanceAccounttype
     public string text { get; set; }
 }
 
-public class AccountBalanceCreditlimit
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
 
-public class AccountBalanceBalance
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
-
-public class AccountBalanceBalanceeur
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
-
-public class AccountBalanceAvailablecashamount
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
-
-public class AccountBalanceAvailablecashamounteur
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
 
 

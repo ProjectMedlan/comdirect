@@ -9,20 +9,8 @@ public class ReportResponse
 
 public class ReportAggregated
 {
-    public ReportBalanceeur balanceEUR { get; set; }
-    public ReportAvailablecashamounteur availableCashAmountEUR { get; set; }
-}
-
-public class ReportBalanceeur
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
-
-public class ReportAvailablecashamounteur
-{
-    public string value { get; set; }
-    public string unit { get; set; }
+    public Balance balanceEUR { get; set; }
+    public Balance availableCashAmountEUR { get; set; }
 }
 
 public class Report
@@ -31,23 +19,23 @@ public class Report
     public string productType { get; set; }
     public string targetClientId { get; set; }
     public string clientConnectionType { get; set; }
-    public Balance balance { get; set; }
+    public ReportBalance balance { get; set; }
 }
 
-public class Balance
+public class ReportBalance
 {
     public ReportAccount account { get; set; }
     public string accountId { get; set; }
-    public ReportBalance1 balance { get; set; }
-    public ReportBalanceeur1 balanceEUR { get; set; }
-    public ReportAvailablecashamount availableCashAmount { get; set; }
-    public ReportAvailablecashamounteur1 availableCashAmountEUR { get; set; }
+    public Balance balance { get; set; }
+    public Balance balanceEUR { get; set; }
+    public Balance availableCashAmount { get; set; }
+    public Balance availableCashAmountEUR { get; set; }
     public string cardId { get; set; }
     public ReportCard card { get; set; }
     public string depotId { get; set; }
     public ReportDepot depot { get; set; }
     public string dateLastUpdate { get; set; }
-    public ReportPrevdayvalue prevDayValue { get; set; }
+    public Balance prevDayValue { get; set; }
 }
 
 public class ReportAccount
@@ -57,7 +45,7 @@ public class ReportAccount
     public string currency { get; set; }
     public ReportAccounttype accountType { get; set; }
     public string iban { get; set; }
-    public ReportCreditlimit creditLimit { get; set; }
+    public Balance creditLimit { get; set; }
 }
 
 public class ReportAccounttype
@@ -66,42 +54,12 @@ public class ReportAccounttype
     public string text { get; set; }
 }
 
-public class ReportCreditlimit
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
-
-public class ReportBalance1
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
-
-public class ReportBalanceeur1
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
-
-public class ReportAvailablecashamount
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
-
-public class ReportAvailablecashamounteur1
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
-
 public class ReportCard
 {
     public string cardId { get; set; }
     public ReportCardtype cardType { get; set; }
     public string status { get; set; }
-    public ReportCardlimit cardLimit { get; set; }
+    public Balance cardLimit { get; set; }
     public string holderName { get; set; }
     public bool nexiCard { get; set; }
     public bool replacementCardPossible { get; set; }
@@ -113,12 +71,6 @@ public class ReportCardtype
     public string text { get; set; }
 }
 
-public class ReportCardlimit
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
-
 public class ReportDepot
 {
     public string depotId { get; set; }
@@ -128,8 +80,3 @@ public class ReportDepot
     public object[] settlementAccountIds { get; set; }
 }
 
-public class ReportPrevdayvalue
-{
-    public string value { get; set; }
-    public string unit { get; set; }
-}
