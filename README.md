@@ -83,7 +83,10 @@ es dann bei der Berechnung der Seitenanzahl zu Fehler kommen könnte.
 
 Eine Übersicht über Änderungen und Updates im Projekt.
 
-- 1.0.0.4 (XX.XX.2025)
+- 1.0.0.4 (01.05.2025)
+  - NuGet Pakete aktualisiert
+  - Fix, dass die Fehlermeldung beim Login nicht mehr gelöscht wird
+  - Ein paar Warnings erledigt
   - Einige redundante Klassen bei den Response Objekten entfernt
   - ToolTip Fix für die ListViews hinzugefügt
 

@@ -72,18 +72,21 @@ namespace Comdirect
         #region Login
         private async void btnLogin_Click(object sender, EventArgs e)
         {
-            if ((_comdirectAPI == null) && (await PerformFullLogin()))
+            if (_comdirectAPI != null)
+            {
+                // Logout
+                _comdirectAPI?.RevokeSession();
+                _comdirectAPI = null;
+                ResetUI();
+                return;
+            }
+
+            if (await PerformFullLogin())
             {
                 btnLogin.Text = "Logout";
                 await LoadReport();
                 await LoadPostBoxEntries(1);
                 _postboxNavigator?.Refresh();
-            }
-            else
-            {
-                _comdirectAPI?.RevokeSession();
-                _comdirectAPI = null;
-                ResetUI();
             }
         }
 
@@ -120,6 +123,13 @@ namespace Comdirect
 
             string? tan_type = _comdirectAPI.GetTanChallengeType();
             string? challenge = _comdirectAPI.GetTanChallenge();
+            
+            if (string.IsNullOrEmpty(tan_type))
+            {
+                RaiseNewLogMessage("Login: Schritt 3: Tan-Type konnte nicht abgerufen werden");
+                return false;
+            }
+
             string tan = "";
 
             FrmTanConfirmation tanConfirmation = new FrmTanConfirmation();
@@ -285,7 +295,7 @@ namespace Comdirect
             lvwAccountTransactions.ResumeLayout();
             tabCtrl.SelectedTab = tabPageAccountTransactions;
 
-            string tabLabel = _lastReport.Accounts.FirstOrDefault(x => x.AccountId == accountId)?.AccountDescription;
+            string? tabLabel = _lastReport?.Accounts.FirstOrDefault(x => x.AccountId == accountId)?.AccountDescription;
             tabPageAccountTransactions.Text = tabLabel ?? "Konto-Transaktionen";
         }
 
@@ -371,8 +381,8 @@ namespace Comdirect
             if (_depotPositionCache[depotId].Count == 0) return;
 
             // Set the Depot ToolTip on the Account Listview Depts Entry
-            ListViewItem depotItem = lvwAccounts.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag is ReportDepotViewModel && ((ReportDepotViewModel)x.Tag!).DepotId == depotId);
-            DepotDetailsViewModel depotDetails = _depotDetailsCache[depotId].FirstOrDefault();
+            ListViewItem? depotItem = lvwAccounts.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag is ReportDepotViewModel && ((ReportDepotViewModel)x.Tag!).DepotId == depotId);
+            DepotDetailsViewModel? depotDetails = _depotDetailsCache[depotId].FirstOrDefault();
             if ((depotItem != null) && (depotDetails != null))
             {
                 StringBuilder depotToolTip = new StringBuilder();

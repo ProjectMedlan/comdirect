@@ -11,7 +11,7 @@ public partial class FrmTanConfirmation : Form
         InitializeComponent();
     }
 
-    public void Init(string mode, string challenge)
+    public void Init(string mode, string? challenge)
     {
         // I guess this is not supported anymore
         if (mode == Constants.TAN_TYPE_MOBILE_TAN)
@@ -37,11 +37,15 @@ public partial class FrmTanConfirmation : Form
         {
             this.Size = LARGE_SIZE;
             lblInfo.Text = "Bitte geben Sie die Photo TAN ein.";
+
             // Decode Base 64 String in pic
-            byte[] imageBytes = Convert.FromBase64String(challenge);
-            using (MemoryStream ms = new MemoryStream(imageBytes))
+            if (!string.IsNullOrEmpty(challenge))
             {
-                picBoxPhotoTan.Image = Image.FromStream(ms);
+                byte[] imageBytes = Convert.FromBase64String(challenge);
+                using (MemoryStream ms = new MemoryStream(imageBytes))
+                {
+                    picBoxPhotoTan.Image = Image.FromStream(ms);
+                }
             }
             txtTAN.Focus();
         }

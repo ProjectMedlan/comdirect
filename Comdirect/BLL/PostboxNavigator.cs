@@ -14,8 +14,8 @@ internal class PostboxNavigator
     public int CurrentPage { get; set; }
     public bool OnlyNewFilter { get; set; }
 
-    public event Action<List<DocumentViewModel>> OnDocumentsToViewChanged;
-    public event Action<string> CurrentProgressChanged;
+    public event Action<List<DocumentViewModel>>? OnDocumentsToViewChanged;
+    public event Action<string>? CurrentProgressChanged;
 
     public List<DocumentViewModel> DocumentCache { get; set; }
 

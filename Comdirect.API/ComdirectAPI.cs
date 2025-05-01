@@ -35,9 +35,9 @@ public class ComdirectAPI
     private const string API_BASE_URL = "https://api.comdirect.de";
 
     // Logging
-    public Action<string> OnNewInfoLogMessage;
-    public Action<string> OnNewDebugLogMessage;
-    public Action<int> OnSessionTimeoutChanged;
+    public Action<string>? OnNewInfoLogMessage;
+    public Action<string>? OnNewDebugLogMessage;
+    public Action<int>? OnSessionTimeoutChanged;
 
     // HTTPClient
     HttpClient _httpClient;
@@ -396,7 +396,7 @@ public class ComdirectAPI
          „without-attr=depot“: es wird die Lieferung des Depot-Objekts unterdrückt  
          „without-attr=positions“: es wird die Lieferung des Position-Objekts unterdrückt
          */
-
+        await Task.Delay(1);
         throw new NotImplementedException();
     }
 
