@@ -60,7 +60,7 @@ public class DepotPosition
 public class DepotPositionPrice
 {
     public Balance price { get; set; }
-    public DateTime priceDateTime { get; set; }
+    public DateTime? priceDateTime { get; set; }
     public DepotPositionListVenue? venue { get; set; }
 }
 

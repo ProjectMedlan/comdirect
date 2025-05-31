@@ -83,6 +83,10 @@ es dann bei der Berechnung der Seitenanzahl zu Fehler kommen könnte.
 
 Eine Übersicht über Änderungen und Updates im Projekt.
 
+- 1.0.0.5 (31.05.2025)
+  - NuGet Pakete aktualisiert
+  - Fix. Depot-Positionen haben nicht immer ein Datum bei den Preisinformationen
+
 - 1.0.0.4 (01.05.2025)
   - NuGet Pakete aktualisiert
   - Fix, dass die Fehlermeldung beim Login nicht mehr gelöscht wird
