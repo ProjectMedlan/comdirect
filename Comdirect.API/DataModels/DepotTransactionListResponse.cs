@@ -1,21 +1,21 @@
 ﻿namespace Comdirect.API.DataModels;
 public class DepotTransactionListResponse
 {
-    public ComdirectPaging paging { get; set; }
-    public DepotTransaction[] values { get; set; }
+    public ComdirectPaging paging { get; set; } = null!;
+    public DepotTransaction[] values { get; set; } = [];
 }
 
 public class DepotTransaction
 {
-    public string transactionId { get; set; }
-    public string bookingStatus { get; set; }
-    public string bookingDate { get; set; }
-    public string businessDate { get; set; }
-    public Balance quantity { get; set; }
-    public string instrumentId { get; set; }
-    public ComdirectInstrument instrument { get; set; }
-    public Balance executionPrice { get; set; }
-    public Balance transactionValue { get; set; }
-    public string transactionDirection { get; set; }
-    public string transactionType { get; set; }
+    public string transactionId { get; set; } = null!;
+    public string bookingStatus { get; set; } = null!;
+    public string bookingDate { get; set; } = null!;
+    public string businessDate { get; set; } = null!;
+    public Balance quantity { get; set; } = null!;
+    public string instrumentId { get; set; } = null!;
+    public ComdirectInstrument instrument { get; set; } = null!;
+    public Balance executionPrice { get; set; } = null!;
+    public Balance transactionValue { get; set; } = null!;
+    public string transactionDirection { get; set; } = null!;
+    public string transactionType { get; set; } = null!;
 }

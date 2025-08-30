@@ -2,34 +2,34 @@
 
 public class AccountBalanceListResponse
 {
-    public ComdirectPaging paging { get; set; }
-    public AccountBalanceResponse[] values { get; set; }
+    public ComdirectPaging paging { get; set; } = null!;
+    public AccountBalanceResponse[] values { get; set; } = [];
 }
 
 public class AccountBalanceResponse
 {
-    public AccountBalanceAccount account { get; set; }
-    public string accountId { get; set; }
-    public Balance balance { get; set; }
-    public Balance balanceEUR { get; set; }
-    public Balance availableCashAmount { get; set; }
-    public Balance availableCashAmountEUR { get; set; }
+    public AccountBalanceAccount account { get; set; } = null!;
+    public string accountId { get; set; } = null!;
+    public Balance balance { get; set; } = null!;
+    public Balance balanceEUR { get; set; } = null!;
+    public Balance availableCashAmount { get; set; } = null!;
+    public Balance availableCashAmountEUR { get; set; } = null!;
 }
 
 public class AccountBalanceAccount
 {
-    public string accountId { get; set; }
-    public string accountDisplayId { get; set; }
-    public string currency { get; set; }
-    public string clientId { get; set; }
-    public AccountBalanceAccounttype accountType { get; set; }
-    public string iban { get; set; }
-    public string bic { get; set; }
-    public Balance creditLimit { get; set; }
+    public string accountId { get; set; } = null!;
+    public string accountDisplayId { get; set; } = null!;
+    public string currency { get; set; } = null!;
+    public string clientId { get; set; } = null!;
+    public AccountBalanceAccounttype accountType { get; set; } = null!;
+    public string iban { get; set; } = null!;
+    public string bic { get; set; } = null!;
+    public Balance creditLimit { get; set; } = null!;
 }
 
 public class AccountBalanceAccounttype
 {
-    public string key { get; set; }
-    public string text { get; set; }
+    public string key { get; set; } = null!;
+    public string text { get; set; } = null!;
 }

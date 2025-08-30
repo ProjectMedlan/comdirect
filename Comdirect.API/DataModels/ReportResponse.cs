@@ -2,81 +2,81 @@
 
 public class ReportResponse
 {
-    public ComdirectPaging paging { get; set; }
-    public ReportAggregated aggregated { get; set; }
-    public Report[] values { get; set; }
+    public ComdirectPaging paging { get; set; } = null!;
+    public ReportAggregated aggregated { get; set; } = null!;
+    public Report[] values { get; set; } = [];
 }
 
 public class ReportAggregated
 {
-    public Balance balanceEUR { get; set; }
-    public Balance availableCashAmountEUR { get; set; }
+    public Balance balanceEUR { get; set; } = null!;
+    public Balance availableCashAmountEUR { get; set; } = null!;
 }
 
 public class Report
 {
-    public string productId { get; set; }
-    public string productType { get; set; }
-    public string targetClientId { get; set; }
-    public string clientConnectionType { get; set; }
-    public ReportBalance balance { get; set; }
+    public string productId { get; set; } = null!;
+    public string productType { get; set; } = null!;
+    public string targetClientId { get; set; } = null!;
+    public string clientConnectionType { get; set; } = null!;
+    public ReportBalance balance { get; set; } = null!;
 }
 
 public class ReportBalance
 {
-    public ReportAccount account { get; set; }
-    public string accountId { get; set; }
-    public Balance balance { get; set; }
-    public Balance balanceEUR { get; set; }
-    public Balance availableCashAmount { get; set; }
-    public Balance availableCashAmountEUR { get; set; }
-    public string cardId { get; set; }
-    public ReportCard card { get; set; }
-    public string depotId { get; set; }
-    public ReportDepot depot { get; set; }
-    public string dateLastUpdate { get; set; }
-    public Balance prevDayValue { get; set; }
+    public ReportAccount account { get; set; } = null!;
+    public string accountId { get; set; } = null!;
+    public Balance balance { get; set; } = null!;
+    public Balance balanceEUR { get; set; } = null!;
+    public Balance availableCashAmount { get; set; } = null!;
+    public Balance availableCashAmountEUR { get; set; } = null!;
+    public string cardId { get; set; } = null!;
+    public ReportCard card { get; set; } = null!;
+    public string depotId { get; set; } = null!;
+    public ReportDepot depot { get; set; } = null!;
+    public string dateLastUpdate { get; set; } = null!;
+    public Balance prevDayValue { get; set; } = null!;
 }
 
 public class ReportAccount
 {
-    public string accountId { get; set; }
-    public string accountDisplayId { get; set; }
-    public string currency { get; set; }
-    public ReportAccounttype accountType { get; set; }
-    public string iban { get; set; }
-    public Balance creditLimit { get; set; }
+    public string accountId { get; set; } = null!;
+    public string accountDisplayId { get; set; } = null!;
+    public string currency { get; set; } = null!;
+    public ReportAccounttype accountType { get; set; } = null!;
+    public string iban { get; set; } = null!;
+    public Balance creditLimit { get; set; } = null!;
 }
 
 public class ReportAccounttype
 {
-    public string key { get; set; }
-    public string text { get; set; }
+    public string key { get; set; } = null!;
+    public string text { get; set; } = null!;
 }
 
 public class ReportCard
 {
-    public string cardId { get; set; }
-    public ReportCardtype cardType { get; set; }
-    public string status { get; set; }
-    public Balance cardLimit { get; set; }
-    public string holderName { get; set; }
+    public string cardId { get; set; } = null!;
+    public ReportCardtype cardType { get; set; } = null!;
+    public string status { get; set; } = null!;
+    public Balance cardLimit { get; set; } = null!;
+    public string holderName { get; set; } = null!;
     public bool nexiCard { get; set; }
     public bool replacementCardPossible { get; set; }
 }
 
 public class ReportCardtype
 {
-    public string key { get; set; }
-    public string text { get; set; }
+    public string key { get; set; } = null!;
+    public string text { get; set; } = null!;
 }
 
 public class ReportDepot
 {
-    public string depotId { get; set; }
-    public string depotDisplayId { get; set; }
-    public string clientId { get; set; }
-    public string defaultSettlementAccountId { get; set; }
-    public object[] settlementAccountIds { get; set; }
+    public string depotId { get; set; } = null!;
+    public string depotDisplayId { get; set; } = null!;
+    public string clientId { get; set; } = null!;
+    public string defaultSettlementAccountId { get; set; } = null!;
+    public object[] settlementAccountIds { get; set; } = [];
 }
 

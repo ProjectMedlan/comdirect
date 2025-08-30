@@ -71,7 +71,6 @@ es dann bei der Berechnung der Seitenanzahl zu Fehler kommen könnte.
 ### API
 - API-Requests Refactoring: Doppelte Code Blöcke zusammenfassen
 - Exception Handling hinzufügen
-- Kompiler-Warnungen beheben
 
 ### UI
 - Einstellungsdialog
@@ -86,7 +85,8 @@ Eine Übersicht über Änderungen und Updates im Projekt.
 - 1.0.0.6 (30.08.2025)
   - NuGet Pakete aktualisiert
   - Some minor formatting changes
-  - Fix. Depot-Transaktionen hat einen Fehler verursacht, wenn keine Transaktionen vorhanden sind
+  - Fix: Depot-Transaktionen hat einen Fehler verursacht, wenn keine Transaktionen vorhanden sind
+  - Fix: Initalisierungen für automatisch generierte Klassen (Compiler Warnings)
 
 - 1.0.0.5 (31.05.2025)
   - NuGet Pakete aktualisiert

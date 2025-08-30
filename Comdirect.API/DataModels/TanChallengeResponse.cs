@@ -4,7 +4,7 @@ public class TanChallengeResponse
 {
     public string? id { get; set; }
     public string? typ { get; set; }
-    public string[]? availableTypes { get; set; }
+    public string[] availableTypes { get; set; } = [];
     public string? challenge { get; set; }
     public Link? link { get; set; }
 }
