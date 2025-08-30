@@ -65,5 +65,4 @@ public static class ReportViewModelConverter
         viewModel.AvailableCashAmountInEuro = ConverterHelper.ParseDecimal(report.balance.availableCashAmountEUR.value);
         return viewModel;
     }
-
 }

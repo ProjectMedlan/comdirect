@@ -29,7 +29,7 @@ public class ComdirectInstrumentStaticdata
 /// <summary>Basisklasse für die Paging-Informationen</summary>
 public class ComdirectPaging
 {
-    public int index { get; set; }
+    public int? index { get; set; }
     public int matches { get; set; }
 }
 public class Balance

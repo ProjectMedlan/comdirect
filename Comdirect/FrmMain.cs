@@ -1,15 +1,12 @@
 using Comdirect.API;
-using Comdirect.ViewModelConverter;
+using Comdirect.BLL;
 using Comdirect.Shared;
+using Comdirect.ViewModelConverter;
 using Comdirect.ViewModels;
 using Microsoft.Extensions.Configuration;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using Comdirect.BLL;
-using System.Diagnostics.CodeAnalysis;
-using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace Comdirect
 {
@@ -26,7 +23,6 @@ namespace Comdirect
         private ReportViewModel? _lastReport;
         private Dictionary<string, List<AccountTransactionViewModel>> _accountTransactionCache = new Dictionary<string, List<AccountTransactionViewModel>>();
 
-        // TODO: Add
         private Dictionary<string, List<DepotTransactionViewModel>> _depotTransactionCache = new Dictionary<string, List<DepotTransactionViewModel>>();
         private Dictionary<string, List<DepotPositionViewModel>> _depotPositionCache = new Dictionary<string, List<DepotPositionViewModel>>();
         private Dictionary<string, List<DepotDetailsViewModel>> _depotDetailsCache = new Dictionary<string, List<DepotDetailsViewModel>>();

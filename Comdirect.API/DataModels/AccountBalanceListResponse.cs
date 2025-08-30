@@ -33,7 +33,3 @@ public class AccountBalanceAccounttype
     public string key { get; set; }
     public string text { get; set; }
 }
-
-
-
-

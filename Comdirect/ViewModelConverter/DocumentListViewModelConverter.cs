@@ -10,7 +10,7 @@ public static class DocumentListViewModelConverter
         DocumentListViewModel viewModel = new DocumentListViewModel();
 
         // For future pagination
-        viewModel.StartIndex = response.paging.index;
+        viewModel.StartIndex = response.paging.index ?? 0;
         viewModel.FetchCount = response.aggregated.matchesInThisResponse;
 
         viewModel.TotalDocuments = response.paging.matches;

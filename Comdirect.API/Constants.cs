@@ -69,6 +69,4 @@ public class Constants
         { "TRANSFER_IN", "Einlieferung" },
         { "TRANSFER_OUT", "Auslieferung" }
     };
-
-
 }

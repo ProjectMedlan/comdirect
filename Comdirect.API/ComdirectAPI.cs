@@ -326,7 +326,6 @@ public class ComdirectAPI
     #endregion
 
     #region 5. Depot
-
     public async Task<DepotResponseList?> GetAllDepots()
     {
         if (_cdSecondaryResponse == null) return null;
