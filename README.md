@@ -82,7 +82,7 @@ es dann bei der Berechnung der Seitenanzahl zu Fehler kommen könnte.
 
 Eine Übersicht über Änderungen und Updates im Projekt.
 
-- - 1.0.0.7 (04.01.2026)
+- 1.0.0.7 (04.01.2026)
   - NuGet Pakete aktualisiert
   - Update .NET 10
 
