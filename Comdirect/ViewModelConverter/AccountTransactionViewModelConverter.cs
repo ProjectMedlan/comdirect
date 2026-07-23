@@ -19,7 +19,7 @@ public static class AccountTransactionViewModelConverter
         viewModel.CategoryDisplayName = response.categoryDisplayName;
         viewModel.TransactionTypeDisplayName = response.transactionTypeDisplayName;
         viewModel.Remitter = response.remitter?.holderName;
-        viewModel.Creditor = response.creditor?.holderName; ;
+        viewModel.Creditor = response.creditor?.holderName;
         viewModel.TransactionValue = ConverterHelper.ParseDecimal(response.transactionValue.value);
         response.remittanceInfo?.ToList().ForEach(viewModel.RemittanceInfo.Add);
 

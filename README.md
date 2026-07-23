@@ -84,6 +84,8 @@ Eine Übersicht über Änderungen und Updates im Projekt.
   - Fix: Datei-Encoding/Umlaute
   - Fix: Postbox-Seitenberechnung
   - Fix: Betrag parsen angepasst
+  - Refactoring: API-Requests über gemeinsamen Helper zusammengefasst
+  - Refactoring: Doppelte Cache-/Ladelogik in der UI zusammengefasst
 
 - 1.0.0.8 (23.05.2026)
   - NuGet Pakete aktualisiert

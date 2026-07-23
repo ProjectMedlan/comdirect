@@ -1,4 +1,5 @@
 ﻿using Comdirect.API;
+using Comdirect.API.DataModels;
 using Comdirect.BLL;
 using Comdirect.Shared;
 using Comdirect.ViewModelConverter;
@@ -256,28 +257,13 @@ namespace Comdirect
             if (_comdirectAPI == null) return;
             if (string.IsNullOrEmpty(accountId)) return;
 
-            // Get Data from API or Cache
-            if (!_accountTransactionCache.ContainsKey(accountId) || forceReload)
-            {
-                var transactionsList = await _comdirectAPI.GetAccountTransactions(accountId);
-                if (transactionsList == null) return;
-
-                // Remove old values from cache
-                _accountTransactionCache.Remove(accountId);
-
-                // Add new list to cache
-                _accountTransactionCache.TryAdd(accountId, []);
-
-                // Convert to ViewModel
-                foreach (var transactionResponse in transactionsList.values)
-                {
-                    _accountTransactionCache[accountId].Add(transactionResponse.ConvertToViewModel());
-                }
-
-                RaiseNewLogMessage($"{transactionsList.values.Length} Kontotransaktionen geladen");
-            }
-
-            if (_accountTransactionCache[accountId].Count == 0) return;
+            var transactions = await LoadIntoCache<AccountTransactionListResponse, AccountTransaction, AccountTransactionViewModel>(
+                _accountTransactionCache, accountId, forceReload,
+                _comdirectAPI.GetAccountTransactions,
+                response => response.values,
+                transaction => transaction.ConvertToViewModel(),
+                "Kontotransaktionen");
+            if (transactions == null || transactions.Count == 0) return;
 
             // Show in ListView
             lvwAccountTransactions.Items.Clear();
@@ -308,28 +294,13 @@ namespace Comdirect
             if (_comdirectAPI == null) return;
             if (string.IsNullOrEmpty(depotId)) return;
 
-            // Get Data from API or Cache
-            if (!_depotTransactionCache.ContainsKey(depotId) || forceReload)
-            {
-                var transactionsList = await _comdirectAPI.GetDepotTransactions(depotId);
-                if (transactionsList == null) return;
-
-                // Remove old values from cache
-                _depotTransactionCache.Remove(depotId);
-
-                // Add new list to cache
-                _depotTransactionCache.TryAdd(depotId, []);
-
-                // Convert to ViewModel
-                foreach (var transactionResponse in transactionsList.values)
-                {
-                    _depotTransactionCache[depotId].Add(transactionResponse.ConvertToViewModel());
-                }
-
-                RaiseNewLogMessage($"{transactionsList.values.Length} Depottransaktionen geladen");
-            }
-
-            if (_depotTransactionCache[depotId].Count == 0) return;
+            var transactions = await LoadIntoCache<DepotTransactionListResponse, DepotTransaction, DepotTransactionViewModel>(
+                _depotTransactionCache, depotId, forceReload,
+                _comdirectAPI.GetDepotTransactions,
+                response => response.values,
+                transaction => transaction.ConvertToViewModel(),
+                "Depottransaktionen");
+            if (transactions == null || transactions.Count == 0) return;
 
             // Show in ListView
             lvwDepotTransactions.Items.Clear();
@@ -356,31 +327,14 @@ namespace Comdirect
             if (_comdirectAPI == null) return;
             if (string.IsNullOrEmpty(depotId)) return;
 
-            // Get Data from API or Cache
-            if (!_depotPositionCache.ContainsKey(depotId) || forceReload)
-            {
-                var positionsList = await _comdirectAPI.GetDepotPositions(depotId);
-                if (positionsList == null) return;
-
-                // Remove old values from cache
-                _depotPositionCache.Remove(depotId);
-                _depotDetailsCache.Remove(depotId);
-
-                // Add new list to cache
-                _depotPositionCache.TryAdd(depotId, []);
-                _depotDetailsCache.TryAdd(depotId, []);
-
-                // Convert to ViewModel
-                _depotDetailsCache[depotId].Add(positionsList.aggregated.ConvertToViewModel());
-                foreach (var positionResponse in positionsList.values)
-                {
-                    _depotPositionCache[depotId].Add(positionResponse.ConvertToViewModel());
-                }
-
-                RaiseNewLogMessage($"{positionsList.values.Length} Depotpositionen geladen");
-            }
-
-            if (_depotPositionCache[depotId].Count == 0) return;
+            var positions = await LoadIntoCache<DepotPositionListResponse, DepotPosition, DepotPositionViewModel>(
+                _depotPositionCache, depotId, forceReload,
+                _comdirectAPI.GetDepotPositions,
+                response => response.values,
+                position => position.ConvertToViewModel(),
+                "Depotpositionen",
+                response => _depotDetailsCache[depotId] = [response.aggregated.ConvertToViewModel()]);
+            if (positions == null || positions.Count == 0) return;
 
             // Set the Depot ToolTip on the Account Listview Depts Entry
             ListViewItem? depotItem = lvwAccounts.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag is ReportDepotViewModel && ((ReportDepotViewModel)x.Tag!).DepotId == depotId);
@@ -414,6 +368,35 @@ namespace Comdirect
                 lvwDepotPositions.Items.Add(lvi);
             }
             lvwDepotPositions.ResumeLayout();
+        }
+
+        /// <summary>
+        /// Loads a list-based response into the given cache (respecting a reload flag), converts the
+        /// items to their ViewModels and returns the cached list. Returns null if the API call fails.
+        /// </summary>
+        /// <param name="onLoaded">Optional hook to process the raw response (e.g. to fill an additional cache) when data was (re)loaded.</param>
+        private async Task<List<TViewModel>?> LoadIntoCache<TResponse, TSource, TViewModel>(
+            Dictionary<string, List<TViewModel>> cache,
+            string key,
+            bool forceReload,
+            Func<string, Task<TResponse?>> fetch,
+            Func<TResponse, IEnumerable<TSource>> itemsSelector,
+            Func<TSource, TViewModel> converter,
+            string logLabel,
+            Action<TResponse>? onLoaded = null)
+        {
+            if (cache.TryGetValue(key, out var cached) && !forceReload)
+                return cached;
+
+            var response = await fetch(key);
+            if (response == null) return null;
+
+            onLoaded?.Invoke(response);
+
+            var items = itemsSelector(response).Select(converter).ToList();
+            cache[key] = items;
+            RaiseNewLogMessage($"{items.Count} {logLabel} geladen");
+            return items;
         }
 
         #endregion

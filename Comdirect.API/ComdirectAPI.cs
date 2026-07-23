@@ -225,10 +225,7 @@ public class ComdirectAPI
         request.Headers.Add("Accept", "application/json");
 
         var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
         return response.StatusCode == HttpStatusCode.NoContent;
-
     }
     public async Task<bool> RefreshSession()
     {
@@ -265,123 +262,57 @@ public class ComdirectAPI
 
     #endregion
 
+    #region API Request Helper
+
+    /// <summary>Adds the standard authentication and request-info headers for API data requests.</summary>
+    private void AddApiHeaders(HttpRequestMessage request, string accept = "application/json")
+    {
+        request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
+        request.Headers.Add("Accept", accept);
+        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
+    }
+
+    /// <summary>Sends an authenticated request and deserializes the JSON response. Returns default on missing token or non-OK status.</summary>
+    private async Task<T?> SendApiRequest<T>(HttpMethod method, string url)
+    {
+        if (_cdSecondaryResponse == null) return default;
+        if (string.IsNullOrEmpty(_cdSecondaryResponse.access_token)) return default;
+
+        var request = new HttpRequestMessage(method, url);
+        AddApiHeaders(request);
+
+        var response = await _httpClient.SendAsync(request);
+        if (response.StatusCode != HttpStatusCode.OK) return default;
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        if (string.IsNullOrEmpty(responseContent)) return default;
+
+        return JsonSerializer.Deserialize<T>(responseContent);
+    }
+
+    #endregion
+
     #region 4. Accounts
     public async Task<AccountBalanceListResponse?> GetAllAccountBalances()
-    {
-        if (_cdSecondaryResponse == null) return null;
-        if (string.IsNullOrEmpty(_cdSecondaryResponse.access_token)) return null;
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/banking/clients/user/v2/accounts/balances");
-        request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
-
-        var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-        if (response.StatusCode != HttpStatusCode.OK) return null;
-        if (responseContent == null) return null;
-
-        return JsonSerializer.Deserialize<AccountBalanceListResponse>(responseContent);
-    }
+        => await SendApiRequest<AccountBalanceListResponse>(HttpMethod.Get, $"{API_BASE_URL}/api/banking/clients/user/v2/accounts/balances");
 
     public async Task<AccountBalanceResponse?> GetAccountBalance(string accountId)
-    {
-        if (_cdSecondaryResponse == null) return null;
-        if (string.IsNullOrEmpty(_cdSecondaryResponse.access_token)) return null;
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/banking/v2/accounts/{accountId}/balances");
-        request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
-
-        var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-        if (response.StatusCode != HttpStatusCode.OK) return null;
-        if (responseContent == null) return null;
-
-        return JsonSerializer.Deserialize<AccountBalanceResponse>(responseContent);
-    }
+        => await SendApiRequest<AccountBalanceResponse>(HttpMethod.Get, $"{API_BASE_URL}/api/banking/v2/accounts/{accountId}/balances");
 
     public async Task<AccountTransactionListResponse?> GetAccountTransactions(string accountId)
-    {
-        if (_cdSecondaryResponse == null) return null;
-        if (string.IsNullOrEmpty(_cdSecondaryResponse.access_token)) return null;
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/banking/v2/accounts/{accountId}/transactions");
-        request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
-
-        var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-        if (response.StatusCode != HttpStatusCode.OK) return null;
-        if (responseContent == null) return null;
-
-        return JsonSerializer.Deserialize<AccountTransactionListResponse>(responseContent);
-    }
+        => await SendApiRequest<AccountTransactionListResponse>(HttpMethod.Get, $"{API_BASE_URL}/api/banking/v2/accounts/{accountId}/transactions");
 
     #endregion
 
     #region 5. Depot
     public async Task<DepotResponseList?> GetAllDepots()
-    {
-        if (_cdSecondaryResponse == null) return null;
-        if (string.IsNullOrEmpty(_cdSecondaryResponse.access_token)) return null;
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/brokerage/clients/user/v3/depots");
-        request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
-
-        var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-        if (response.StatusCode != HttpStatusCode.OK) return null;
-        if (responseContent == null) return null;
-
-        return JsonSerializer.Deserialize<DepotResponseList>(responseContent);
-    }
+        => await SendApiRequest<DepotResponseList>(HttpMethod.Get, $"{API_BASE_URL}/api/brokerage/clients/user/v3/depots");
 
     public async Task<DepotPositionListResponse?> GetDepotPositions(string depotId)
-    {
-        if (_cdSecondaryResponse == null) return null;
-        if (string.IsNullOrEmpty(_cdSecondaryResponse.access_token)) return null;
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/brokerage/v3/depots/{depotId}/positions?with-attr=instrument");
-        request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
-
-        var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-        if (response.StatusCode != HttpStatusCode.OK) return null;
-        if (responseContent == null) return null;
-
-        return JsonSerializer.Deserialize<DepotPositionListResponse>(responseContent);
-    }
+        => await SendApiRequest<DepotPositionListResponse>(HttpMethod.Get, $"{API_BASE_URL}/api/brokerage/v3/depots/{depotId}/positions?with-attr=instrument");
 
     public async Task<DepotTransactionListResponse?> GetDepotTransactions(string depotId)
-    {
-        if (_cdSecondaryResponse == null) return null;
-        if (string.IsNullOrEmpty(_cdSecondaryResponse.access_token)) return null;
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/brokerage/v3/depots/{depotId}/transactions");
-        request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
-
-        var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-        if (response.StatusCode != HttpStatusCode.OK) return null;
-        if (responseContent == null) return null;
-
-        return JsonSerializer.Deserialize<DepotTransactionListResponse>(responseContent);
-    }
+        => await SendApiRequest<DepotTransactionListResponse>(HttpMethod.Get, $"{API_BASE_URL}/api/brokerage/v3/depots/{depotId}/transactions");
 
     public async Task<string?> GetDepotPosition(string depotId, string positionId)
     {
@@ -413,23 +344,7 @@ public class ComdirectAPI
     }
 
     public async Task<DocumentListResponse?> GetDocuments(int start, int count)
-    {
-        if (_cdSecondaryResponse == null) return null;
-        if (string.IsNullOrEmpty(_cdSecondaryResponse.access_token)) return null;
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/messages/clients/user/v2/documents?paging-first={start}&paging-count={count}");
-        request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
-
-        var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-        if (response.StatusCode != HttpStatusCode.OK) return null;
-        if (responseContent == null) return null;
-
-        return JsonSerializer.Deserialize<DocumentListResponse>(responseContent);
-    }
+        => await SendApiRequest<DocumentListResponse>(HttpMethod.Get, $"{API_BASE_URL}/api/messages/clients/user/v2/documents?paging-first={start}&paging-count={count}");
 
     public async Task<byte[]?> GetDocument(string? documentId, string? mimetype)
     {
@@ -439,17 +354,12 @@ public class ComdirectAPI
         if (string.IsNullOrEmpty(mimetype)) return null;
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/messages/v2/documents/{documentId}");
-        request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
-        request.Headers.Add("Accept", mimetype);
-        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
+        AddApiHeaders(request, mimetype);
 
         var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsByteArrayAsync();
         if (response.StatusCode != HttpStatusCode.OK) return null;
-        if (responseContent == null) return null;
 
-        return responseContent;
+        return await response.Content.ReadAsByteArrayAsync();
     }
 
     #endregion
@@ -457,23 +367,7 @@ public class ComdirectAPI
     #region 10. Reports
 
     public async Task<ReportResponse?> GetReport()
-    {
-        if (_cdSecondaryResponse == null) return null;
-        if (string.IsNullOrEmpty(_cdSecondaryResponse.access_token)) return null;
-
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{API_BASE_URL}/api/reports/participants/user/v1/allbalances");
-        request.Headers.Add("Authorization", $"Bearer {_cdSecondaryResponse?.access_token}");
-        request.Headers.Add("Accept", "application/json");
-        request.Headers.Add("x-http-request-info", JsonSerializer.Serialize(_clientRequestId));
-
-        var response = await _httpClient.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-        if (response.StatusCode != HttpStatusCode.OK) return null;
-        if (responseContent == null) return null;
-
-        return JsonSerializer.Deserialize<ReportResponse>(responseContent);
-    }
+        => await SendApiRequest<ReportResponse>(HttpMethod.Get, $"{API_BASE_URL}/api/reports/participants/user/v1/allbalances");
 
     #endregion
 }
