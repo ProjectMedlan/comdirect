@@ -61,11 +61,6 @@ Folgende Einschränkungen sind zu beachten
 
 Die Demo Applikation geht im Moment davon aus, dass die zurückgelieferten Werte in Euro sind. (Was sie im Regelfall auch sind)
 
-### Bekannte Bugs
-
-Ich glaube das es ein Problem sein könnte, wenn man viele ungelesene Nachrichten hat und diese dann herunterlädt, dass
-es dann bei der Berechnung der Seitenanzahl zu Fehler kommen könnte.
-
 ## Geplante Änderungen
 
 ### API
@@ -81,6 +76,18 @@ es dann bei der Berechnung der Seitenanzahl zu Fehler kommen könnte.
 ## Changelog
 
 Eine Übersicht über Änderungen und Updates im Projekt.
+
+- 1.0.0.9 (23.07.2026)
+  - NuGet Pakete aktualisiert
+  - Fix: Depot-Vortagspreise
+  - Fix: Log-Threading-Crash
+  - Fix: Datei-Encoding/Umlaute
+  - Fix: Postbox-Seitenberechnung
+  - Fix: Betrag parsen angepasst
+
+- 1.0.0.8 (23.05.2026)
+  - NuGet Pakete aktualisiert
+  - Refactoring: Warnings & Messages
 
 - 1.0.0.7 (04.01.2026)
   - NuGet Pakete aktualisiert

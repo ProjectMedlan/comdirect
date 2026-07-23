@@ -1,25 +1,24 @@
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
-namespace Comdirect
+namespace Comdirect;
+
+internal static class Program
 {
-    internal static class Program
+    public static IConfiguration Configuration = null!;
+
+    /// <summary>
+    ///  The main entry point for the application.
+    /// </summary>
+    [STAThread]
+    static void Main()
     {
-        public static IConfiguration Configuration = null!;
+        var builder = new ConfigurationBuilder()
+       .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+       .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
+        Configuration = builder.Build();
 
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            var builder = new ConfigurationBuilder()
-           .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-           .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
-            Configuration = builder.Build();
-
-            ApplicationConfiguration.Initialize();
-            Application.Run(new FrmMain());
-        }
+        ApplicationConfiguration.Initialize();
+        Application.Run(new FrmMain());
     }
 }

@@ -19,9 +19,9 @@ public static class DepotPositionViewModelConverter
         viewModel.CurrentPriceTimestamp = response.currentPrice.priceDateTime;
         viewModel.CurrentPriceVenue = response.currentPrice.venue?.name;
 
-        viewModel.CurrentPrice = ConverterHelper.ParseDecimal(response.prevDayPrice.price.value);
-        viewModel.CurrentPriceTimestamp = response.prevDayPrice.priceDateTime;
-        viewModel.CurrentPriceVenue = response.prevDayPrice.venue?.name;
+        viewModel.PreviousPrice = ConverterHelper.ParseDecimal(response.prevDayPrice.price.value);
+        viewModel.PreviousPriceTimestamp = response.prevDayPrice.priceDateTime;
+        viewModel.PreviousPriceVenue = response.prevDayPrice.venue?.name;
 
         viewModel.CurrentValue = ConverterHelper.ParseDecimal(response.currentValue.value);
         viewModel.PurchaseValue = ConverterHelper.ParseDecimal(response.purchaseValue.value);

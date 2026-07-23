@@ -21,7 +21,7 @@ public class Constants
     public const string TRANSACTION_DIRECTION_INCOMING = "IN";
     public const string TRANSACTION_DIRECTION_OUTGOING = "OUT";
 
-    public static Dictionary<string, string> ACCOUNT_TYPES = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> ACCOUNT_TYPES = new()
     {
         { "FX", "Fremdwährungskonto" },
         { "OF", "Options-Futures-Konto" },
@@ -32,7 +32,7 @@ public class Constants
         { "LLA", "Wertpapier-Kreditkonto" },
     };
 
-    public static Dictionary<string, string> CARD_STATUS = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> CARD_STATUS = new()
     {
         { "ACTIVE", "Aktiv" },
         { "INACTIVE", "Inaktiv" },
@@ -40,7 +40,7 @@ public class Constants
         { "UNKNOWN", "Unbekannt" }
     };
 
-    public static Dictionary<int, string> DOCUMENT_CATEGORIES = new Dictionary<int, string>
+    public static readonly Dictionary<int, string> DOCUMENT_CATEGORIES = new()
     {
         { 301, "Nutzungsbedingungen (?)" },
         { 613, "Umtausch-/Barabfindungsangebot (?)" },
@@ -50,7 +50,7 @@ public class Constants
         { 700, "Dividendengutschrift" }
     };
 
-    public static Dictionary<string, string> ACCOUNT_TRANSACTION_TYPES = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> ACCOUNT_TRANSACTION_TYPES = new()
     {
         { "SECURITIES", "Wertpapiere" },
         { "CARD_TRANSACTION", "Kartenverfügung" },
@@ -62,7 +62,7 @@ public class Constants
         { "DIRECT_DEBIT", "Lastschriften" },
     };
 
-    public static Dictionary<string, string> DEPOT_TRANSACTION_TYPES = new Dictionary<string, string>
+    public static readonly Dictionary<string, string> DEPOT_TRANSACTION_TYPES = new()
     {
         { "BUY", "Kauf" },
         { "SELL", "Verkauf" },

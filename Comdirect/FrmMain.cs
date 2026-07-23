@@ -1,4 +1,4 @@
-using Comdirect.API;
+Ôªøusing Comdirect.API;
 using Comdirect.BLL;
 using Comdirect.Shared;
 using Comdirect.ViewModelConverter;
@@ -21,11 +21,10 @@ namespace Comdirect
         private const int MAX_POSTBOX_ITEMS_PER_REQUEST = 20; // Max 20 items per request (default)
 
         private ReportViewModel? _lastReport;
-        private Dictionary<string, List<AccountTransactionViewModel>> _accountTransactionCache = new Dictionary<string, List<AccountTransactionViewModel>>();
-
-        private Dictionary<string, List<DepotTransactionViewModel>> _depotTransactionCache = new Dictionary<string, List<DepotTransactionViewModel>>();
-        private Dictionary<string, List<DepotPositionViewModel>> _depotPositionCache = new Dictionary<string, List<DepotPositionViewModel>>();
-        private Dictionary<string, List<DepotDetailsViewModel>> _depotDetailsCache = new Dictionary<string, List<DepotDetailsViewModel>>();
+        private readonly Dictionary<string, List<AccountTransactionViewModel>> _accountTransactionCache = [];
+        private readonly Dictionary<string, List<DepotTransactionViewModel>> _depotTransactionCache = [];
+        private readonly Dictionary<string, List<DepotPositionViewModel>> _depotPositionCache = [];
+        private readonly Dictionary<string, List<DepotDetailsViewModel>> _depotDetailsCache = [];
 
         private PostboxNavigator? _postboxNavigator;
 
@@ -36,8 +35,8 @@ namespace Comdirect
         private const int WM_VSCROLL = 277;
         private const int SB_PAGEBOTTOM = 7;
 
-        private ToolTip _listViewToolTip = new ToolTip();
-        private Point _listViewHoverPosition = new Point(-1, -1);
+        private readonly ToolTip _listViewToolTip = new();
+        private Point _listViewHoverPosition = new(-1, -1);
         private ListViewItem? _lastListViewItem = null;
 
         public FrmMain()
@@ -119,7 +118,7 @@ namespace Comdirect
 
             string? tan_type = _comdirectAPI.GetTanChallengeType();
             string? challenge = _comdirectAPI.GetTanChallenge();
-            
+
             if (string.IsNullOrEmpty(tan_type))
             {
                 RaiseNewLogMessage("Login: Schritt 3: Tan-Type konnte nicht abgerufen werden");
@@ -128,7 +127,7 @@ namespace Comdirect
 
             string tan = "";
 
-            FrmTanConfirmation tanConfirmation = new FrmTanConfirmation();
+            var tanConfirmation = new FrmTanConfirmation();
             tanConfirmation.Init(tan_type, challenge);
             if (tanConfirmation.ShowDialog() != DialogResult.OK) return false;
             tan = tanConfirmation.GetTan();
@@ -157,7 +156,7 @@ namespace Comdirect
                 _lastReport = reportData.ConvertToViewModel();
                 RaiseNewDebugLogMessage($"Anzahl der Konten: {_lastReport.AccountsCount}");
                 RaiseNewDebugLogMessage($"Gesamtwert: {_lastReport.TotalBalanceInEuro}");
-                RaiseNewDebugLogMessage($"Verf¸gbar: {_lastReport.AvailableCashAmountInEuro}");
+                RaiseNewDebugLogMessage($"Verf√ºgbar: {_lastReport.AvailableCashAmountInEuro}");
 
                 lvwAccounts.Items.Clear();
                 lvwAccounts.SuspendLayout();
@@ -181,8 +180,10 @@ namespace Comdirect
                     totalBalance += item.PreviousDayValue;
                 }
 
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = "Gesamt";
+                var lvi = new ListViewItem
+                {
+                    Text = "Gesamt"
+                };
                 lvi.SubItems.Add(totalBalance.ToString("C"));
                 lvi.SubItems.Add("Inkl. Kreditlimit: " + (totalBalance + totalCreditLimit).ToString("C"));
                 lvwAccounts.Items.Add(lvi);
@@ -190,32 +191,38 @@ namespace Comdirect
             }
         }
 
-        private ListViewItem ConvertToListItem(ReportAccountViewModel item)
+        private static ListViewItem ConvertToListItem(ReportAccountViewModel item)
         {
-            ListViewItem lvi = new ListViewItem();
-            lvi.Tag = item;
-            lvi.Text = item.AccountDescription;
+            var lvi = new ListViewItem
+            {
+                Tag = item,
+                Text = item.AccountDescription
+            };
             lvi.SubItems.Add(item.BalanceInEuro.ToString("C"));
             if (item.CreditLimitInEuro > 0)
                 lvi.SubItems.Add("Dispo: " + item.CreditLimitInEuro.ToString("C"));
             return lvi;
         }
 
-        private ListViewItem ConvertToListItem(ReportCardViewModel item)
+        private static ListViewItem ConvertToListItem(ReportCardViewModel item)
         {
-            ListViewItem lvi = new ListViewItem();
-            lvi.Tag = item;
-            lvi.Text = item.CardType;
+            var lvi = new ListViewItem
+            {
+                Tag = item,
+                Text = item.CardType
+            };
             lvi.SubItems.Add(item.CardBalanceInEuro.ToString("C"));
             lvi.SubItems.Add("Status: " + item.CardStatus);
             return lvi;
         }
 
-        private ListViewItem ConvertToListItem(ReportDepotViewModel item)
+        private static ListViewItem ConvertToListItem(ReportDepotViewModel item)
         {
-            ListViewItem lvi = new ListViewItem();
-            lvi.Tag = item;
-            lvi.Text = "Wertpapierdepot";
+            var lvi = new ListViewItem
+            {
+                Tag = item,
+                Text = "Wertpapierdepot"
+            };
             lvi.SubItems.Add(item.PreviousDayValue.ToString("C"));
             lvi.SubItems.Add("Stand: " + item.LastUpdate?.ToString("dd.MM.yyyy"));
             return lvi;
@@ -256,11 +263,10 @@ namespace Comdirect
                 if (transactionsList == null) return;
 
                 // Remove old values from cache
-                if (_accountTransactionCache.ContainsKey(accountId))
-                    _accountTransactionCache.Remove(accountId);
+                _accountTransactionCache.Remove(accountId);
 
                 // Add new list to cache
-                _accountTransactionCache.TryAdd(accountId, new List<AccountTransactionViewModel>());
+                _accountTransactionCache.TryAdd(accountId, []);
 
                 // Convert to ViewModel
                 foreach (var transactionResponse in transactionsList.values)
@@ -278,10 +284,12 @@ namespace Comdirect
             lvwAccountTransactions.SuspendLayout();
             foreach (var currentTransaction in _accountTransactionCache[accountId])
             {
-                ListViewItem lvi = new ListViewItem();
-                lvi.UseItemStyleForSubItems = false;
-                lvi.Tag = currentTransaction;
-                lvi.Text = currentTransaction.BookingDate.HasValue ? currentTransaction.BookingDate.Value.ToString("dd.MM.yyyy") : "Offen";
+                var lvi = new ListViewItem
+                {
+                    UseItemStyleForSubItems = false,
+                    Tag = currentTransaction,
+                    Text = currentTransaction.BookingDate.HasValue ? currentTransaction.BookingDate.Value.ToString("dd.MM.yyyy") : "Offen"
+                };
                 lvi.SubItems.Add(currentTransaction.Remitter ?? currentTransaction.Creditor ?? currentTransaction.CategoryDisplayName ?? "");
                 lvi.SubItems.Add(currentTransaction.TransactionValue.ToString("C")).ForeColor = currentTransaction.TransactionValue > 0 ? Color.Green : Color.Red;
                 lvi.SubItems.Add(currentTransaction.TransactionTypeDisplayName ?? "");
@@ -307,11 +315,10 @@ namespace Comdirect
                 if (transactionsList == null) return;
 
                 // Remove old values from cache
-                if (_depotTransactionCache.ContainsKey(depotId))
-                    _depotTransactionCache.Remove(depotId);
+                _depotTransactionCache.Remove(depotId);
 
                 // Add new list to cache
-                _depotTransactionCache.TryAdd(depotId, new List<DepotTransactionViewModel>());
+                _depotTransactionCache.TryAdd(depotId, []);
 
                 // Convert to ViewModel
                 foreach (var transactionResponse in transactionsList.values)
@@ -329,9 +336,11 @@ namespace Comdirect
             lvwDepotTransactions.SuspendLayout();
             foreach (var currentTransaction in _depotTransactionCache[depotId])
             {
-                ListViewItem lvi = new ListViewItem();
-                lvi.Tag = currentTransaction;
-                lvi.Text = currentTransaction.BookingDate.HasValue ? currentTransaction.BookingDate.Value.ToString("dd.MM.yyyy") : "Offen";
+                var lvi = new ListViewItem
+                {
+                    Tag = currentTransaction,
+                    Text = currentTransaction.BookingDate.HasValue ? currentTransaction.BookingDate.Value.ToString("dd.MM.yyyy") : "Offen"
+                };
                 lvi.SubItems.Add(currentTransaction.Instrument?.ShortName ?? "");
                 lvi.SubItems.Add(currentTransaction.Quantity.ToString());
                 lvi.SubItems.Add(currentTransaction.TransactionValue.ToString("C")).ForeColor = currentTransaction.TransactionValue > 0 ? Color.Green : Color.Red;
@@ -354,15 +363,12 @@ namespace Comdirect
                 if (positionsList == null) return;
 
                 // Remove old values from cache
-                if (_depotPositionCache.ContainsKey(depotId))
-                    _depotPositionCache.Remove(depotId);
-
-                if (_depotDetailsCache.ContainsKey(depotId))
-                    _depotDetailsCache.Remove(depotId);
+                _depotPositionCache.Remove(depotId);
+                _depotDetailsCache.Remove(depotId);
 
                 // Add new list to cache
-                _depotPositionCache.TryAdd(depotId, new List<DepotPositionViewModel>());
-                _depotDetailsCache.TryAdd(depotId, new List<DepotDetailsViewModel>());
+                _depotPositionCache.TryAdd(depotId, []);
+                _depotDetailsCache.TryAdd(depotId, []);
 
                 // Convert to ViewModel
                 _depotDetailsCache[depotId].Add(positionsList.aggregated.ConvertToViewModel());
@@ -381,11 +387,11 @@ namespace Comdirect
             DepotDetailsViewModel? depotDetails = _depotDetailsCache[depotId].FirstOrDefault();
             if ((depotItem != null) && (depotDetails != null))
             {
-                StringBuilder depotToolTip = new StringBuilder();
+                var depotToolTip = new StringBuilder();
                 depotToolTip.AppendLine($"Aktueller Wert: {depotDetails.CurrentValue.ToString("C")}");
                 depotToolTip.AppendLine($"Vortag: {depotDetails.PreviousDayValue.ToString("C")}");
                 depotToolTip.AppendLine($"Kaufwert: {depotDetails.PurchaseValue.ToString("C")}");
-                depotToolTip.AppendLine($"Ver‰nderung: {depotDetails.TotalProfitOrLoss.ToString("C")}");
+                depotToolTip.AppendLine($"Ver√§nderung: {depotDetails.TotalProfitOrLoss.ToString("C")}");
                 depotItem.ToolTipText = depotToolTip.ToString();
             }
 
@@ -393,13 +399,15 @@ namespace Comdirect
             // Show in ListView
             lvwDepotPositions.Items.Clear();
             lvwDepotPositions.SuspendLayout();
-            List<DepotPositionViewModel> sortedPositions = _depotPositionCache[depotId].OrderBy(x => x.Instrument?.Name).ToList();
+            List<DepotPositionViewModel> sortedPositions = [.. _depotPositionCache[depotId].OrderBy(x => x.Instrument?.Name)];
             foreach (var currentPosition in sortedPositions)
             {
-                ListViewItem lvi = new ListViewItem();
-                lvi.UseItemStyleForSubItems = false;
-                lvi.Tag = currentPosition;
-                lvi.Text = currentPosition.Instrument?.Name;
+                var lvi = new ListViewItem
+                {
+                    UseItemStyleForSubItems = false,
+                    Tag = currentPosition,
+                    Text = currentPosition.Instrument?.Name
+                };
                 lvi.SubItems.Add(currentPosition.Quantity.ToString());
                 lvi.SubItems.Add(currentPosition.CurrentValue.ToString("C"));
                 lvi.SubItems.Add(currentPosition.TotalProfitOrLoss.ToString("C")).ForeColor = currentPosition.TotalProfitOrLoss > 0 ? Color.Green : Color.Red;
@@ -471,9 +479,11 @@ namespace Comdirect
             lvwPostBox.SuspendLayout();
             foreach (var item in currentList)
             {
-                ListViewItem lvi = new ListViewItem();
-                lvi.Tag = item;
-                lvi.Text = string.Empty; // No Content - just checkboxes
+                var lvi = new ListViewItem
+                {
+                    Tag = item,
+                    Text = string.Empty // No Content - just checkboxes
+                };
                 lvi.SubItems.Add(item.CreationDate?.ToString("dd.MM.yyyy"));
                 lvi.SubItems.Add(item.Name);
 
@@ -494,9 +504,11 @@ namespace Comdirect
 
             if (_comdirectAPI == null) return;
 
-            FolderBrowserDialog folderDialog = new FolderBrowserDialog();
-            folderDialog.InitialDirectory = (_userSettings != null && !string.IsNullOrEmpty(_userSettings.DefaultDownloadDirectory)) ? _userSettings.DefaultDownloadDirectory : "";
-            folderDialog.ShowNewFolderButton = true;
+            var folderDialog = new FolderBrowserDialog
+            {
+                InitialDirectory = (_userSettings != null && !string.IsNullOrEmpty(_userSettings.DefaultDownloadDirectory)) ? _userSettings.DefaultDownloadDirectory : "",
+                ShowNewFolderButton = true
+            };
             if (folderDialog.ShowDialog() != DialogResult.OK) return;
             var selectedDirectory = folderDialog.SelectedPath;
 
@@ -519,8 +531,8 @@ namespace Comdirect
                 string filename = doc.CreationDate?.ToString("yyyy-MM-dd") + " - " + doc.Name + fileExtension;
 
                 // Replace illegale filename characters
-                string regSearch = new string(Path.GetInvalidFileNameChars());
-                Regex rg = new Regex(string.Format("[{0}]", Regex.Escape(regSearch)));
+                string regSearch = new(Path.GetInvalidFileNameChars());
+                var rg = new Regex(string.Format("[{0}]", Regex.Escape(regSearch)));
                 filename = rg.Replace(filename, "");
 
                 // Set selected directory & write file
@@ -567,7 +579,7 @@ namespace Comdirect
 
         #region ListView ToolTip Fix
         // https://stackoverflow.com/questions/13069137/how-to-set-tooltip-for-a-listviewsubitem
-                
+
         private void listview_MouseMove(object sender, MouseEventArgs e)
         {
             ListView listView = (ListView)sender;
@@ -609,7 +621,7 @@ namespace Comdirect
 
             if (rtbLog.InvokeRequired)
             {
-                this.Invoke(new Action<Enumerations.LogTypes, string>(RaiseNewLogMessage), new { logType, message });
+                this.Invoke(new Action<Enumerations.LogTypes, string>(RaiseNewLogMessage), logType, message);
                 return;
             }
 

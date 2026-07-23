@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Projektmappenelemente/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Comdirect.API/Comdirect.API.csproj" />
+  <Project Path="Comdirect/Comdirect.csproj" />
+</Solution>

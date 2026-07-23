@@ -73,7 +73,7 @@ internal class PostboxNavigator
 
     public void NextPage()
     {
-        int maxPage = OnlyNewFilter ? TotalCountWithFilter : TotalCount;
+        int maxPage = OnlyNewFilter ? TotalPagesWithFilter : TotalPages;
 
         if (CurrentPage < maxPage)
         {

@@ -1,12 +1,14 @@
-﻿namespace Comdirect.ViewModelConverter;
+﻿using System.Globalization;
+
+namespace Comdirect.ViewModelConverter;
 internal static class ConverterHelper
 {
     public static decimal ParseDecimal(string value)
     {
         if (string.IsNullOrEmpty(value)) return 0;
 
-        // Repace dot with a comma (there's only one dot as decimal seperator due to the documentation)
-        return decimal.Parse(value.Replace(".", ","));
+        // The API always uses a dot as decimal separator (see documentation)
+        return decimal.Parse(value, CultureInfo.InvariantCulture);
     }
 
     public static DateOnly? ParseDate(string value)
