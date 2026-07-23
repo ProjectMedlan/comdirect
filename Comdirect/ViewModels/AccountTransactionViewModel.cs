@@ -8,11 +8,7 @@ public class AccountTransactionViewModel
     public string? TransactionTypeDisplayName { get; set; }
     public string? CategoryDisplayName { get; set; }
     public string? Remitter { get; set; }
-    public List<string> RemittanceInfo { get; set; }
+    public List<string> RemittanceInfo { get; set; } = [];
     public string? Creditor { get; set; }
     public decimal TransactionValue { get; set; }
-    public AccountTransactionViewModel()
-    {
-        RemittanceInfo = new List<string>();
-    }
 }

@@ -6,11 +6,5 @@ public class DocumentListViewModel
     public int TotalDocuments { get; set; }
     public int TotalUnreadDocuments { get; set; }
     public DateOnly? OldestEntryDate { get; set; }
-    public List<DocumentViewModel> Documents { get; set; }
-
-    public DocumentListViewModel()
-    {
-        Documents = new List<DocumentViewModel>();
-    }
-
+    public List<DocumentViewModel> Documents { get; set; } = [];
 }
