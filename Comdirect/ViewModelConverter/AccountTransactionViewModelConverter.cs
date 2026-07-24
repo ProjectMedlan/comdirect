@@ -3,7 +3,7 @@ using Comdirect.API.DataModels;
 using Comdirect.ViewModels;
 
 namespace Comdirect.ViewModelConverter;
-public static class AccountTransactionViewModelConverter
+internal static class AccountTransactionViewModelConverter
 {
     public static AccountTransactionViewModel ConvertToViewModel(this AccountTransaction response)
     {

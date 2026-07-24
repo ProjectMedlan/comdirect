@@ -1,5 +1,5 @@
 ﻿namespace Comdirect.API;
-public class Constants
+public static class Constants
 {
     public const string PRODUCT_TYPE_DEPOT = "DEPOT";
     public const string PRODUCT_TYPE_ACCOUNT = "ACCOUNT";

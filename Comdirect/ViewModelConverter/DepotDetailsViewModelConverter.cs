@@ -3,7 +3,7 @@ using Comdirect.ViewModels;
 
 namespace Comdirect.ViewModelConverter;
 
-public static class DepotDetailsViewModelConverter
+internal static class DepotDetailsViewModelConverter
 {
     public static DepotDetailsViewModel ConvertToViewModel(this DepotPositionListAggregated response)
     {

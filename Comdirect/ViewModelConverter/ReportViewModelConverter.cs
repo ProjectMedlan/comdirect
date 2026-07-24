@@ -3,7 +3,7 @@ using Comdirect.API.DataModels;
 using Comdirect.ViewModels;
 
 namespace Comdirect.ViewModelConverter;
-public static class ReportViewModelConverter
+internal static class ReportViewModelConverter
 {
     public static ReportViewModel ConvertToViewModel(this ReportResponse response)
     {

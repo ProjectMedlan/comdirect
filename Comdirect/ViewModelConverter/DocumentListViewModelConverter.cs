@@ -3,7 +3,7 @@ using Comdirect.API.DataModels;
 using Comdirect.ViewModels;
 
 namespace Comdirect.ViewModelConverter;
-public static class DocumentListViewModelConverter
+internal static class DocumentListViewModelConverter
 {
     public static DocumentListViewModel ConvertToViewModel(this DocumentListResponse response)
     {
@@ -33,7 +33,7 @@ public static class DocumentListViewModelConverter
         viewModel.Name = document.name;
         viewModel.CreationDate = ConverterHelper.ParseDate(document.dateCreation);
         viewModel.MimeType = document.mimeType;
-        viewModel.IsAdvertisment = document.advertisement;
+        viewModel.IsAdvertisement = document.advertisement;
         viewModel.IsArchived = document.documentMetaData.archived;
         viewModel.IsRead = document.documentMetaData.alreadyRead;
         viewModel.ReadDate = ConverterHelper.ParseDate(document.documentMetaData.dateRead);

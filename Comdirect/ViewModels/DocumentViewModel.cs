@@ -9,7 +9,7 @@ public class DocumentViewModel
     public bool IsRead { get; set; }
     public DateOnly? ReadDate { get; set; }
     public  bool IsArchived { get; set; }
-    public bool IsAdvertisment { get; set; }
+    public bool IsAdvertisement { get; set; }
     public int CategoryID { get; set; }
     public string? CategoryName { get; set; }
 

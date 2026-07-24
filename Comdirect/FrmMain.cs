@@ -71,9 +71,8 @@ namespace Comdirect
             if (_comdirectAPI != null)
             {
                 // Logout
-                _comdirectAPI?.RevokeSession();
-                _comdirectAPI = null;
-                ResetUI();
+                await _comdirectAPI.RevokeSession();
+                ResetUI(); // Gibt die API-Instanz frei
                 return;
             }
 
@@ -513,7 +512,7 @@ namespace Comdirect
                 string fileExtension = doc.MimeType.Contains("pdf") ? ".pdf" : ".html";
                 string filename = doc.CreationDate?.ToString("yyyy-MM-dd") + " - " + doc.Name + fileExtension;
 
-                // Replace illegale filename characters
+                // Replace illegal filename characters
                 string regSearch = new(Path.GetInvalidFileNameChars());
                 var rg = new Regex(string.Format("[{0}]", Regex.Escape(regSearch)));
                 filename = rg.Replace(filename, "");
@@ -628,6 +627,7 @@ namespace Comdirect
 
         private void ResetUI()
         {
+            _comdirectAPI?.Dispose();
             _comdirectAPI = null;
             btnLogin.Text = "Login";
             btnSessionTimeout.Enabled = false;
@@ -664,8 +664,7 @@ namespace Comdirect
                     RaiseNewLogMessage("Refresh fehlgeschlagen - starte Logout!");
                     if (await _comdirectAPI.RevokeSession())
                     {
-                        _comdirectAPI = null;
-                        ResetUI();
+                        ResetUI(); // Gibt die API-Instanz frei
                     }
                 }
             }
@@ -681,6 +680,8 @@ namespace Comdirect
         {
             if (_comdirectAPI == null) return;
             await _comdirectAPI.RevokeSession();
+            _comdirectAPI.Dispose();
+            _comdirectAPI = null;
         }
 
         #endregion

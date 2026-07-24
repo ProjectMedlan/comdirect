@@ -64,8 +64,8 @@ Die Demo Applikation geht im Moment davon aus, dass die zurückgelieferten Werte
 ## Geplante Änderungen
 
 ### API
-- API-Requests Refactoring: Doppelte Code Blöcke zusammenfassen
 - Exception Handling hinzufügen
+- Depotposition einzeln abfragen (`GetDepotPosition`)
 
 ### UI
 - Einstellungsdialog
@@ -77,7 +77,7 @@ Die Demo Applikation geht im Moment davon aus, dass die zurückgelieferten Werte
 
 Eine Übersicht über Änderungen und Updates im Projekt.
 
-- 1.0.0.9 (23.07.2026)
+- 1.0.0.9 (24.07.2026)
   - NuGet Pakete aktualisiert
   - Fix: Depot-Vortagspreise
   - Fix: Log-Threading-Crash
@@ -87,6 +87,8 @@ Eine Übersicht über Änderungen und Updates im Projekt.
   - Refactoring: API-Requests über gemeinsamen Helper zusammengefasst
   - Refactoring: Doppelte Cache-/Ladelogik in der UI zusammengefasst
   - Refactoring: ViewModels vereinfacht/zusammengefasst
+  - Fix: API-Session wird jetzt sauber freigegeben (IDisposable)
+  - Refactoring: Kleinere Aufräumarbeiten (readonly, Sichtbarkeiten, Tippfehler)
 
 - 1.0.0.8 (23.05.2026)
   - NuGet Pakete aktualisiert

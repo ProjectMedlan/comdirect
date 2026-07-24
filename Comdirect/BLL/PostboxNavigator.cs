@@ -49,7 +49,7 @@ internal class PostboxNavigator
 
     public void Refresh()
     {
-        // Items could now be 'read' - relod
+        // Items could now be 'read' - reload
         TotalCountWithFilter = DocumentCache.Where(x => !x.IsRead).Count();
         TotalPagesWithFilter = Math.Max(1, (int)Math.Ceiling((double)TotalCountWithFilter / ItemsPerPage));
         PushChanges();

@@ -20,15 +20,15 @@ using System.Text.Json;
 namespace Comdirect.API;
 
 /// <summary>Wrapper for the API</summary>
-public class ComdirectAPI
+public class ComdirectAPI : IDisposable
 {
-    private string _username; // Zugangsnummer
-    private string _password; // PIN
-    private string _client_id; // Client ID
-    private string _client_secret; // Client Secret
+    private readonly string _username; // Zugangsnummer
+    private readonly string _password; // PIN
+    private readonly string _client_id; // Client ID
+    private readonly string _client_secret; // Client Secret
     private LoginResponse? _loginResponse;
-    private ClientSession _clientSession;
-    private ClientRequestId _clientRequestId;
+    private readonly ClientSession _clientSession;
+    private readonly ClientRequestId _clientRequestId;
     private ServerSession? _serverSession;
     private TanChallengeResponse? _tanChallengeResponse;
     private CDSecondaryResponse? _cdSecondaryResponse;
@@ -40,7 +40,7 @@ public class ComdirectAPI
     public Action<int>? OnSessionTimeoutChanged;
 
     // HTTPClient
-    HttpClient _httpClient;
+    private readonly HttpClient _httpClient;
 
     public ComdirectAPI(string username, string password, string client_id, string client_secret)
     {
@@ -83,7 +83,7 @@ public class ComdirectAPI
     }
 
     /// <summary>Step 1: Generate AccessToken</summary>
-    /// <returns>True when an access tokes was received</returns>
+    /// <returns>True when an access token was received</returns>
     public async Task<bool> GetAccessToken()
     {
         var request = new HttpRequestMessage(HttpMethod.Post, $"{API_BASE_URL}/oauth/token");
@@ -128,7 +128,7 @@ public class ComdirectAPI
     public async Task<bool> StartTanChallenge(string forceChallengeType)
     {
         if (_serverSession == null) return false; // Called in wrong order?
-        if (string.IsNullOrEmpty(_serverSession.identifier)) return false; // Called without getting sesssion status?
+        if (string.IsNullOrEmpty(_serverSession.identifier)) return false; // Called without getting session status?
 
         // Set values to true due to documentation
         _serverSession.sessionTanActive = true;
@@ -169,7 +169,7 @@ public class ComdirectAPI
     public async Task<bool> ActivateSession(string tan)
     {
         if (_serverSession == null) return false; // Called in wrong order?
-        if (string.IsNullOrEmpty(_serverSession.identifier)) return false; // Called without getting sesssion status?
+        if (string.IsNullOrEmpty(_serverSession.identifier)) return false; // Called without getting session status?
         if (_tanChallengeResponse == null) return false; // Called in wrong order?
 
         var request = new HttpRequestMessage(HttpMethod.Patch, $"{API_BASE_URL}/api/session/clients/user/v1/sessions/{_serverSession.identifier}");
@@ -185,7 +185,7 @@ public class ComdirectAPI
     }
 
     /// <summary>Step 5: Get CD Secondary FlowToken</summary>
-    /// <returns>True when an access tokes was received</returns>
+    /// <returns>True when an access token was received</returns>
     public async Task<bool> GetCDSecondaryFlowToken()
     {
         if (_loginResponse == null) return false;
@@ -368,6 +368,17 @@ public class ComdirectAPI
 
     public async Task<ReportResponse?> GetReport()
         => await SendApiRequest<ReportResponse>(HttpMethod.Get, $"{API_BASE_URL}/api/reports/participants/user/v1/allbalances");
+
+    #endregion
+
+    #region IDisposable
+
+    /// <summary>Releases the <see cref="HttpClient"/> and its handler chain. Call once the session is no longer used.</summary>
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        GC.SuppressFinalize(this);
+    }
 
     #endregion
 }
